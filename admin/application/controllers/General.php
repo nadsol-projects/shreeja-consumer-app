@@ -399,7 +399,7 @@ public function delSocialsite($id){
 // Location
 
 public function insertLocation(){
-	
+    
 	$loc_name = $this->input->post("location",true);
 	$assign_to = $this->input->post("assign_to",true);
 //	$cutCharges = $this->input->post("cutoffCharges",true);
@@ -453,15 +453,20 @@ public function insertLocation(){
 
  	if($sn){
 		
-		$products = $this->db->like("location","2")->get_where("tbl_products",["assigned_to"=>"agents","deleted"=>0])->result_array();
+		$products = $this->db->query("SELECT * FROM `tbl_products` WHERE `location` = '[\"12\"]' AND assigned_to='agents' AND deleted=0")->result_array();
 	
+	    $prods = [];
 		foreach($products as $p){
 
 			unset($p["id"]);
 			$p["location"] = json_encode(["$iid"]);
-			$this->db->insert("tbl_products",$p);
+			$prods[] = $p;
+// 			$this->db->insert("tbl_products",$p);
 			
 		}
+		
+		$this->db->insert_batch("tbl_products",$prods);
+		
 		$this->alert->pnotify("success","Location Successfully Added","success");
 		redirect("general");
 	}else{

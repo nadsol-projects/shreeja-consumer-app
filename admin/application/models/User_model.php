@@ -18,7 +18,7 @@ class User_model extends CI_Model{
 	   // $date = date("d/m/Y", strtotime("now"));
 //	    $query = $this->db->query("SELECT banner FROM tbl_product_offers WHERE status='Active' and banner != ''");
 		
-$banners = [["banner"=>"assets/modalImages/1.jpg"],["banner"=>"assets/modalImages/2.jpg"],["banner"=>"assets/modalImages/3.jpg"],["banner"=>"assets/modalImages/4.jpg"],["banner"=>"assets/modalImages/5.jpg"],["banner"=>"assets/modalImages/6.jpg"],["banner"=>"assets/modalImages/7.jpg"],["banner"=>"assets/modalImages/8.jpg"],["banner"=>"assets/modalImages/9.jpg"],["banner"=>"assets/modalImages/10.jpg"],["banner"=>"assets/modalImages/11.jpg"],["banner"=>"assets/modalImages/12.jpg"]];
+		$banners = [["banner"=>"assets/modalImages/1.jpg"],["banner"=>"assets/modalImages/2.jpg"],["banner"=>"assets/modalImages/3.jpg"],["banner"=>"assets/modalImages/4.jpg"],["banner"=>"assets/modalImages/5.jpg"],["banner"=>"assets/modalImages/6.jpg"],["banner"=>"assets/modalImages/7.jpg"],["banner"=>"assets/modalImages/8.jpg"],["banner"=>"assets/modalImages/9.jpg"],["banner"=>"assets/modalImages/10.jpg"],["banner"=>"assets/modalImages/11.jpg"],["banner"=>"assets/modalImages/12.jpg"]];
 		
 		$payment_gateway_credentials = $this->admin->get_option("payment_gateway");
 		
@@ -560,6 +560,8 @@ $banners = [["banner"=>"assets/modalImages/1.jpg"],["banner"=>"assets/modalImage
 			"user_status"=>0,
 			"steps_completed" => 4
 		);
+		
+		
 		$check = $this->db->where('userid',$userid)->get('shreeja_users');
 		if($check->num_rows() > 0){
 			$query = $this->db->where('userid',$userid)->update("shreeja_users",$content);
@@ -843,13 +845,46 @@ $banners = [["banner"=>"assets/modalImages/1.jpg"],["banner"=>"assets/modalImage
 			 
 			 if(in_array($loc,json_decode($row1["location"]))){
 			      // $pdata['products'] = $row1;
+				
+				$offers = $this->get_product_offers($row1['id'],$loc); 
+				 
 				$row1['product_price'] = $this->get_quantity($row1['id']);
+				$row1['offers'] = $offers;
+				$row1['offer_status'] = (count($offers) > 0) ? true : false;
 				$data[$i] = $row1;
 				$i++;
 				 
 			 }
 		 }
 			   return $data;
+	}
+	
+	public function get_product_offers($pid,$loc){
+		
+		$offers = $this->db->get_where("tbl_product_offers",["city"=>$loc,"offerType !="=>"Amount","inputProduct"=>$pid,"status"=>"Active"])->result_array();
+		$date = date("m/d/Y", strtotime("now"));
+		
+		$off = [];
+		$outputProduct = [];
+		
+		foreach($offers as $o){
+			
+			if ((strtotime($date) >= strtotime($o["from_date"])) && (strtotime($date) <= strtotime($o["to_date"]))){
+				
+				$opr = $this->db->get_where("tbl_products",["id"=>$o["outputProduct"]])->row_array();
+				
+				if($opr){
+				    $outputProduct[] =  $opr;
+                }
+				$off[] = ["orderType"=>$o["orderType"],"offerType"=>$o["offerType"],"description"=>$o["description"],"banner"=>$o["banner"],"status"=>$o["status"],"outputProduct"=>$outputProduct,"outputQty"=>$o["outputQty"]];
+				
+				
+			}
+			
+		}
+		
+		return $off;
+		
 	}
 
 	public function get_quantity($pid){
@@ -1027,6 +1062,7 @@ $banners = [["banner"=>"assets/modalImages/1.jpg"],["banner"=>"assets/modalImage
 		    }
 		}
 		return array("status"=>true,"products"=>$products);
+
 	}
 	public function productbyid($pid){
 		$query = $this->db->where(array("deleted"=>0,"id"=>$pid))->get("tbl_products")->row_array();
@@ -1362,11 +1398,12 @@ $banners = [["banner"=>"assets/modalImages/1.jpg"],["banner"=>"assets/modalImage
 	    $finalgtotal = number_format((float)array_sum($gtotal), 2, '.', '');
 	  // return array("status"=>true,"gst"=>$finalgst,"deliveryFee"=>$dfee);
 	 
-	   $od = $this->offers_api->value_offer_notification('Amount',array_sum($total),$uid);
+	   //$od = $this->offers_api->value_offer_notification('Amount',array_sum($total),$uid);
+	   $od = $this->offers_api->check_value_offer_on_this_day($dtype,array_sum($total),$uid);
 	   // return $od;
 	    if($od['status']){
 	        
-	           return array("status"=>true,"gst"=>$finalgst,"grand_total"=>$finalgtotal,"deliveryFee"=>$dfee,"offer"=>$od['offer']);
+	           return array("status"=>true,"gst"=>$finalgst,"grand_total"=>$finalgtotal,"deliveryFee"=>$dfee,"offer"=>$od["offer"]);
 	    }else{
 	        return array("status"=>true,"gst"=>$finalgst,"grand_total"=>$finalgtotal,"deliveryFee"=>$dfee,"offer"=>[]);
 	    }
@@ -2161,19 +2198,23 @@ public function order_product(){
         
         $dtype = $object[0]->delevery_type;
         
-         $total_amount = $object[0]->total_amount + $gst;
-	     $minAmt = $this->db->get_where("tbl_charges",array("chargeType"=>"minOrder","status"=>"Active","deliveryType"=>$dtype))->row();
-	        	if($minAmt){
-		
-            		if($total_amount < $minAmt->minimumCharges){
-            			
-            			$msg = 'Cart value should be greater than'.$minAmt->minimumCharges;
-            			return array("status"=>false,"message"=>$msg);
-            
-            		}
-            	}
+        $total_amount = $object[0]->total_amount + $gst;
+	    $minAmt = $this->db->get_where("tbl_charges",array("chargeType"=>"minOrder","status"=>"Active","deliveryType"=>$dtype))->row();
+
+    	$this->db->where("sdate <='".date("Y-m-d",strtotime($start_date))."'");
+    	$this->db->where("edate >='".date("Y-m-d",strtotime($start_date))."'");
+    	$subChk = $this->db->get_where("orders",array("payment_status"=>"Success","order_type"=>"subscribe","user_id"=>$uid))->num_rows();
+		if($minAmt){
+
+			if($total_amount < $minAmt->minimumCharges && $subChk == 0){
+				
+				$msg = 'Cart value should be greater than'.$minAmt->minimumCharges;
+				return array("status"=>false,"message"=>$msg);
+	
+			}
+		}
             	
-        $cf = $this->offers_api->check_value_offer_on_this_day('Amount',$dtype,$total_amount,$uid);
+        $cf = $this->offers_api->check_value_offer_on_this_day($dtype,$total_amount,$uid);
 	    //return $cf;
 	    if($cf['status']){
 	     
@@ -2269,26 +2310,34 @@ public function order_product(){
                          
                 }
                 
-                $cf = $this->offers_api->check_value_offer_on_this_day('Amount',$dtype,$total_amount,$uid);
+                $cf = $this->offers_api->check_value_offer_on_this_day($dtype,$total_amount,$uid);
         	    //return $cf;
         	    if($cf['status']){
         	        //return $cf['offer'];
         	        
-        	        $pdata = $this->db->where(array("id"=>$cf['offer']))->get("tbl_products")->row_array();
-                    $cat = json_decode($pdata["product_quantity"]);
+        	        foreach($cf['offer'] as $cof){
         	        
-        	        $cidata2 = array(
-        			 
-                			"order_id" => $order_id,
-                			"product_id" => $cf['offer'],
-							"product_data"=>json_encode($pdata),
-                			"category" =>$cat->quantity[0],
-                			"price" => 0,
-                			"qty" => 1,
-                			"delivery_date" => date("Y-m-d H:i:s"),
-                			"orderRef" => "offer"
-                		 );
-                		 $op2 = $this->db->insert("order_products",$cidata2);
+        	            if($cof["type"] == $dtype){
+        	            
+                	        $pdata = $this->db->where(array("id"=>$cof['pid']))->get("tbl_products")->row_array();
+                            $cat = json_decode($pdata["product_quantity"]);
+            	        
+                	        $cidata2 = array(
+                			 
+                    			"order_id" => $order_id,
+                    			"product_id" => $cof['pid'],
+        						"product_data"=>json_encode($pdata),
+                    			"category" =>$cat->quantity[0],
+                    			"price" => 0,
+                    			"qty" => $cof["qty"],
+                    			"delivery_date" => date("Y-m-d H:i:s"),
+                    			"orderRef" => "offer"
+                    		 );
+                    		 $op2 = $this->db->insert("order_products",$cidata2);
+                		 
+        	            }
+                		 
+        	        }
                 		 
         	    }
         	    	            
@@ -2353,12 +2402,12 @@ public function order_status($oid="",$tid="",$ostatus="",$roid=""){
 					$ddate = $i->format("Y-m-d");
 
 					$data1 = array("delivery_date"=>$ddate,"order_id"=>$odata['order_id'],"user_id"=>$uid);
-					$oiChk = $this->db->get_where("tbl_subscribed_deliveries",$data1)->num_rows();
 
+                    $oiChk = $this->db->get_where("tbl_subscribed_deliveries",$data1)->num_rows();
                     if($oiChk == 0){
 					    $this->db->insert("tbl_subscribed_deliveries",$data1);
                     }
-
+					
 				}
 
 		 }
@@ -2442,6 +2491,7 @@ public function order_status($oid="",$tid="",$ostatus="",$roid=""){
 
 		 
 }
+
 public function my_orders($uid){
     /* payment_status='Success' and*/
     $orders = $this->db->query("select * from orders where user_id='$uid' order by id desc")->result_array();
@@ -2863,7 +2913,7 @@ public function my_offers(){
     	   return array("status"=>false, "message"=>"Offers not found");
     	}
     
-}		
+}	
 
 public function checkPromo($data){
 	
