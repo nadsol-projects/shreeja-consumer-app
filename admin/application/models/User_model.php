@@ -35,7 +35,7 @@ class User_model extends CI_Model{
 	 public function indent_update(){
         $uid = $this->input->post("userid");
         $products = json_decode($this->input->post("products"),true);
-        $ddate = $this->input->post("deliverydate");
+        $ddate = date("Y-m-d",strtotime($this->input->post("deliverydate")));
         $dtime = $this->input->post("deliverytime");
         $tid = $this->input->post("transactionid");
         $bname = $this->input->post("bankName");
@@ -228,7 +228,7 @@ class User_model extends CI_Model{
         
         $uid = $this->input->post("userid");
         $products = $this->input->post("products");
-        $ddate = $this->input->post("deliverydate");
+        $ddate = date("Y-m-d",strtotime($this->input->post("deliverydate")));
         $dtime = $this->input->post("deliverytime");
         $tid = $this->input->post("transactionid");
       $tamount = $this->input->post("transactionamount");
