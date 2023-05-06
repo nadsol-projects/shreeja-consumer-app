@@ -12,7 +12,7 @@
 		<img src="<?php echo base_url("admin/assets/front/") ?>assets/images/register.jpg" alt="" />
 		</div>
 		<div class="customer-login">
-		<h4 class="pt-4 text-light">Customer Login111</h4>
+		<h4 class="pt-4 text-light">Customer Login</h4>
 		
 		
 			<?php echo $this->session->flashdata("err"); ?>			
