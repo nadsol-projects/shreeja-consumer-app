@@ -268,12 +268,12 @@
 							</div>
 							
 							<div class="row">
-							    <div class="col-md-6">
+							    <!-- <div class="col-md-6">
 							        <div class="form-group">
     							        <input type="radio" name="payment_type" id="mobi" value="mobikwik" required>
-    							        <label for="mobi"><img src="<? echo base_url('assets/mobikwik.png') ?>" width="100%"></label>
+    							        <label for="mobi"><img src="<? //echo base_url('assets/mobikwik.png') ?>" width="100%"></label>
     							     </div>   
-							    </div>
+							    </div> -->
 							    <div class="col-md-6">
 							        <div class="form-group">
     							        <input type="radio" name="payment_type" id="ccav" value="ccavenue">

@@ -95,8 +95,25 @@
 	foreach($categories as $cat){
 
 	$products = $this->db->query("select * from tbl_products where status='Active' and assigned_to='consumers' and deleted=0 and product_category='$cat->id' order by id asc")->result();
+	
+	$isExists = false;	
+	foreach($products as $pr1){
 			
+    	$plocation1 = json_decode($pr1->location);
+    	
+    	$uloc1 = isset($udata->user_location) ? $udata->user_location : "";	
+    		
+    	if(in_array($uloc1,$plocation1) || $uloc == ""){
+    	    $isExists = true;
+    	}
+    }	
 			
+	$pkey = 0;	
+
+	if(count($products) > 0 && $isExists){
+	    
+	    
+	    
   ?>			
 						
 												
@@ -117,10 +134,7 @@
     
  <?php
 	
-	$pkey = 0;	
-
-
-	if(count($products) > 0){	
+		
 
 		foreach($products as $pr){
 			
@@ -304,7 +318,7 @@
  <?php 
 						
   $pkey++;
-  }}} 
+  }} 
 ?>    
 	  
 	</div>
@@ -315,7 +329,8 @@
   </div>
   
 
-<?php  
+<?php
+}
 	$cid++;
 	}}  ?>			
 									

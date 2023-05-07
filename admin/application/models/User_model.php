@@ -35,7 +35,7 @@ class User_model extends CI_Model{
 	 public function indent_update(){
         $uid = $this->input->post("userid");
         $products = json_decode($this->input->post("products"),true);
-        $ddate = date("Y-m-d",strtotime($this->input->post("deliverydate")));
+        $ddate = $this->input->post("deliverydate");
         $dtime = $this->input->post("deliverytime");
         $tid = $this->input->post("transactionid");
         $bname = $this->input->post("bankName");
@@ -228,7 +228,7 @@ class User_model extends CI_Model{
         
         $uid = $this->input->post("userid");
         $products = $this->input->post("products");
-        $ddate = date("Y-m-d",strtotime($this->input->post("deliverydate")));
+        $ddate = $this->input->post("deliverydate");
         $dtime = $this->input->post("deliverytime");
         $tid = $this->input->post("transactionid");
       $tamount = $this->input->post("transactionamount");
@@ -687,10 +687,16 @@ class User_model extends CI_Model{
 	
 			$i = 0;
 			foreach ($query as $row) {
-			   $new["categoryName"] = $row['category_name'];
-			   $new['products'] = $this->productsby_cat($row['id'],$udata->user_location);
-				$data[$i] = $new;
-				$i++;
+			    
+			    $prods = $this->productsby_cat($row['id'],$udata->user_location);
+			    
+			    if(count($prods) > 0){
+    			    $new["categoryName"] = $row['category_name'];
+    			    $new['products'] = $prods;
+    				$data[$i] = $new;
+    				$i++;
+			    }
+			    
 			}
 			/*$categories = $this->db->where("deleted",0)->get("tbl_categories")->result_array();
 			$categ = [];
@@ -3797,7 +3803,7 @@ public function getDQOrders($sdate,$shift,$aid){
 
 // subscription orders
 	
-	$this->db->select('order_id,user_id,shipping_address,delivery_status,order_type,user_data,deliveryShift,assigned_to,deliveryonce_date');
+	$this->db->select('order_id,user_id,shipping_address,delivery_status,order_type,user_data,deliveryShift,assigned_to,deliveryonce_date,sdate');
 	$this->db->from('orders');
 	$this->db->where("payment_status","Success");
 	$this->db->where("order_type","subscribe");
@@ -3851,7 +3857,7 @@ public function get_success_orders($date,$pid,$cat,$aid,$shift){
 		
 		         $oop = $this->db->get_where("order_products",array("order_id"=>$o->order_id,"product_id"=>$pid,"category"=>$cat,"orderRef"=>"offer"))->row();
 					
-				if(strtotime($date) == strtotime($o->sub_start_date)){
+				if(strtotime($date) == strtotime($o->sdate)){
 					$pqty[] = $oop->qty;
 				}
 		
