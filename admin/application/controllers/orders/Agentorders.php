@@ -633,7 +633,7 @@ public function getDQOrders($sdate,$shift,$city){
 
 // subscription orders
 	
-	$this->db->select('order_id,user_id,shipping_address,delivery_status,order_type,user_data,deliveryShift,assigned_to,deliveryonce_date');
+	$this->db->select('order_id,user_id,shipping_address,delivery_status,order_type,user_data,deliveryShift,assigned_to,deliveryonce_date,sdate');
 	$this->db->from('orders');
 	$this->db->where("payment_status","Success");
 	$this->db->where("order_type","subscribe");
@@ -793,7 +793,7 @@ $city = $this->input->post("city");
  $products = $this->db->where_in("assigned_to",array("consumers","freeProduct"))->get("tbl_products")->result_array();
  $i = 0;
  $data = [];
- foreach($products as $row1){
+    foreach($products as $row1){
 
 		$product_quantity = json_decode($row1['product_quantity']);
 		$sap = $product_quantity->sap;
@@ -802,22 +802,89 @@ $city = $this->input->post("city");
 			
 			$packets = $this->getfiltered_success_orders($date,$shift,$row1['id'],$value,$aid,$city);
 			
-			if($packets != 0){
+			if($packets["pqty"] != 0){
 			
 				$new['sno'] = $i+1;
 				$new['product_id'] = $row1['id'];
 				$new['pname'] = $row1['product_name']." ".$value;
 				$new['sap_code'] = $sap[$key];
-				$new['packets'] = $packets;
+				$new['packets'] = $packets["pqty"];
 				$new['uom'] = "EA";
 				$data[$i] = $new;
 				$i++;
 			}
     	}
 
+	}
+	
+	$new['sno'] = $i+1;
+	$new['product_id'] = '<p class="category"></p>';
+	$new['pname'] = '<strong style="font-weight: 600;font-size: 16px;">Free Products</strong>';
+	$new['sap_code'] = '<p class="category"></p>';
+	$new['packets'] = '<p class="category"></p>';
+	$new['uom'] = '<p class="category"></p>';
+	$data[$i] = $new;
+	$i++;
+	
+	foreach($products as $row1){
+
+		$product_quantity = json_decode($row1['product_quantity']);
+		$sap = $product_quantity->sap;
+
+        foreach ($product_quantity->quantity as $key => $value) {
 			
-	       	
-	   }
+			$packets = $this->getfiltered_success_orders($date,$shift,$row1['id'],$value,$city,$agent_id);
+			
+			if($packets["freepqty"] != 0){
+				
+				$new['sno'] = $i+1;
+				$new['product_id'] = $row1['id'];
+				$new['pname'] = $row1['product_name']." ".$value;
+				$new['sap_code'] = $sap[$key];
+				$new['packets'] = $packets["freepqty"];
+				$new['uom'] = "EA";
+				$data[$i] = $new;
+				$i++;
+			}
+			
+    	}
+
+	}
+	
+	$new['sno'] = $i+1;
+	$new['product_id'] = '<p class="category"></p>';
+	$new['pname'] = '<strong style="font-weight: 600;font-size: 16px;">Offer Products</strong>';
+	$new['sap_code'] = '<p class="category"></p>';
+	$new['packets'] = '<p class="category"></p>';
+	$new['uom'] = '<p class="category"></p>';
+	$data[$i] = $new;
+	$i++;
+	
+	foreach($products as $row1){
+
+		$product_quantity = json_decode($row1['product_quantity']);
+		$sap = $product_quantity->sap;
+
+        foreach ($product_quantity->quantity as $key => $value) {
+			
+			$packets = $this->getfiltered_success_orders($date,$shift,$row1['id'],$value,$city,$agent_id);
+			
+			if($packets["offerpqty"] != 0){
+				
+				$new['sno'] = $i+1;
+				$new['product_id'] = $row1['id'];
+				$new['pname'] = $row1['product_name']." ".$value;
+				$new['sap_code'] = $sap[$key];
+				$new['packets'] = $packets["offerpqty"];
+				$new['uom'] = "EA";
+				$data[$i] = $new;
+				$i++;
+			}
+			
+    	}
+
+	}
+	
 	$data_final = $this->final_consolidate($data);
 	
 	
@@ -859,6 +926,9 @@ public function getfiltered_success_orders($date,$shift,$pid,$cat,$aid,$city){
 	
 //	$fsorders = $this->db->query("select * from tbl_free_sample_orders where order_status='Success'")->result();
 	$pqty = [];
+	$freepqty = [];
+	$offerpqty = [];
+	
 	foreach($orders as $o){
 		
 //		echo $o->deliveryonce_date;
@@ -868,7 +938,11 @@ public function getfiltered_success_orders($date,$shift,$pid,$cat,$aid,$city){
 					$opdata = $this->db->where(array("order_id"=>$o->order_id,"product_id"=>$pid,"category"=>$cat))->get("order_products")->result();
 					foreach($opdata as $op){
 			
-						$pqty[] = $op->qty;
+						if($op->orderRef == "offer"){
+                            $offerpqty[] = $op->qty;
+                        }else{
+						    $pqty[] = $op->qty;
+                        }
 						
 					}
 
@@ -879,8 +953,8 @@ public function getfiltered_success_orders($date,$shift,$pid,$cat,$aid,$city){
 				
 				$oop = $this->db->get_where("order_products",array("order_id"=>$o->order_id,"product_id"=>$pid,"category"=>$cat,"orderRef"=>"offer"))->row();
 					
-				if(strtotime($date) == strtotime($o->sub_start_date)){
-					$pqty[] = $oop->qty;
+				if(strtotime($date) == strtotime($o->sdate) && $oop){
+					$offerpqty[] = $oop->qty;
 				}
 				
 				foreach($sdata as $sd){
@@ -915,7 +989,7 @@ public function getfiltered_success_orders($date,$shift,$pid,$cat,$aid,$city){
 			
 		}
 		
-		return array_sum($pqty);
+		return ["pqty"=>array_sum($pqty),"freepqty"=>array_sum($freepqty),"offerpqty"=>array_sum($offerpqty)];
 }	
 	
 public function final_consolidate($data){

@@ -230,7 +230,8 @@ $udata = $this->db->get_where("shreeja_users",array("userid"=>$this->session->us
 											  $pdata = $this->db->get_where("tbl_products",array("id"=>$op->product_id))->row();	   
 											}
 									
-											echo $pdata->product_name." ".$op->category."<br>";		
+									        $ref = $op->orderRef !== NULL ? ' ('.$op->orderRef.')' : '';
+											echo $pdata->product_name." ".$op->category."<br>".$ref;		
 									
 										} ?>
 									</td>
@@ -349,8 +350,8 @@ $udata = $this->db->get_where("shreeja_users",array("userid"=>$this->session->us
 
 											  $pdata = $this->db->get_where("tbl_products",array("id"=>$op->product_id))->row();	   
 											}
-									
-											echo $pdata->product_name." ".$op->category."<br>";		
+									        $ref = $op->orderRef !== NULL ? ' ('.$op->orderRef.')' : '';
+											echo $pdata->product_name." ".$op->category.$ref."<br>";		
 									
 										} ?>
 									</td>

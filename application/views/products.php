@@ -42,7 +42,7 @@
 					foreach($offers as $o){ ?>
                
                 <div class="carousel-item <? echo ($i==0) ? "active" : "" ?>" align="center">
-                    <img src="<?php echo base_url("admin/assets/modalImages/").$o ?>" alt="Offer1"  style="width:auto !important;">
+                    <img src="<?php echo base_url("admin/assets/modalImages/").$o ?>" alt="Offer1" style="width:auto !important;">
                 </div>
                 
                <? 
@@ -95,8 +95,25 @@
 	foreach($categories as $cat){
 
 	$products = $this->db->query("select * from tbl_products where status='Active' and assigned_to='consumers' and deleted=0 and product_category='$cat->id' order by id asc")->result();
+	
+	$isExists = false;	
+	foreach($products as $pr1){
 			
+    	$plocation1 = json_decode($pr1->location);
+    	
+    	$uloc1 = isset($udata->user_location) ? $udata->user_location : "";	
+    		
+    	if(in_array($uloc1,$plocation1) || $uloc == ""){
+    	    $isExists = true;
+    	}
+    }	
 			
+	$pkey = 0;	
+
+	if(count($products) > 0 && $isExists){
+	    
+	    
+	    
   ?>			
 						
 												
@@ -117,10 +134,7 @@
     
  <?php
 	
-	$pkey = 0;	
-
-
-	if(count($products) > 0){	
+		
 
 		foreach($products as $pr){
 			
@@ -184,6 +198,8 @@
 							</div>
 							</div>
 						</form>
+						
+						
 					</div>
 			
 			<?php  
@@ -262,12 +278,47 @@
 			</div>
 		</div>
 		
+		<div class="row">
+			
+			<div class="col-md-12">
+				
+				<? 
+					$offers = $this->db->get_where("tbl_product_offers",["city"=>$uloc,"offerType !="=>"Amount","inputProduct"=>$pr->id,"status"=>"Active"])->result();
+					$date = date("m/d/Y", strtotime("now"));
+
+					$off = [];
+
+					foreach($offers as $o){
+
+						if ((strtotime($date) >= strtotime($o->from_date)) && (strtotime($date) <= strtotime($o->to_date))){
+
+							if($o->orderType == "subscribe"){
+
+								echo '<span style="color: red">Subscription: '.$o->description.'</span><br>';
+
+							}else{
+
+								echo '<span style="color: red">Delivery Once: '.$o->description.'</span>';
+
+							}
+
+
+						}
+
+					}
+			
+				?>			
+				
+			</div>
+			
+		</div>
+		
       </div>
       
  <?php 
 						
   $pkey++;
-  }}} 
+  }} 
 ?>    
 	  
 	</div>
@@ -278,7 +329,8 @@
   </div>
   
 
-<?php  
+<?php
+}
 	$cid++;
 	}}  ?>			
 									
