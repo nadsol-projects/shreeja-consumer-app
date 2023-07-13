@@ -1,3 +1,3 @@
-$(function () {
-    $('#zero_config').editableTableWidget();
+$(function () {
+    $('#zero_config').editableTableWidget();
 });

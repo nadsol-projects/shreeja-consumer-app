@@ -1,7 +1,7 @@
-/*
-Template Name: Admin Template
-Author: Niravjoshi / Wrappixel
-File: scss
+/*
+Template Name: Admin Template
+Author: Niravjoshi / Wrappixel
+File: scss
 */
 /*******************************/
 /*******************************/
@@ -42,21 +42,21 @@ File: scss
 
 /* ***************************** */
 /* ***************************** */
-/* *
- * Table Of Content
- *
- *  1. Color system
- *  2. Options
- *  3. Body
- *  4. Typography
- *  5. Breadcrumbs
- *  6. Cards
- *  7. Dropdowns
- *  8. Buttons
- *  9. Typography
- *  10. Progress bars
- *  11. Tables
- *  12. Forms
+/* *
+ * Table Of Content
+ *
+ *  1. Color system
+ *  2. Options
+ *  3. Body
+ *  4. Typography
+ *  5. Breadcrumbs
+ *  6. Cards
+ *  7. Dropdowns
+ *  8. Buttons
+ *  9. Typography
+ *  10. Progress bars
+ *  11. Tables
+ *  12. Forms
  *  14. Component */
 body[data-theme='dark'] {
   /* Card Color */
@@ -7368,8 +7368,8 @@ a.text-light-warning:hover, a.text-light-warning:focus {
   .table-bordered td {
     border: 1px solid #dee2e6 !important; } }
 
-/*******************
-Padding margin property 
+/*******************
+Padding margin property 
 *******************/
 html[dir="ltr"] body .m-t-5 {
   margin-top: 5px; }
@@ -7719,8 +7719,8 @@ html[dir="ltr"] body .p-l-0 {
 #main-wrapper[data-layout='vertical'] .left-sidebar[data-sidebarbg='skin1'] .sidebar-nav > ul > li.selected > a, #main-wrapper[data-layout='vertical'] .left-sidebar[data-sidebarbg='skin2'] .sidebar-nav > ul > li.selected > a, #main-wrapper[data-layout='vertical'] .left-sidebar[data-sidebarbg='skin3'] .sidebar-nav > ul > li.selected > a, #main-wrapper[data-layout='vertical'] .left-sidebar[data-sidebarbg='skin4'] .sidebar-nav > ul > li.selected > a {
   background: #343a40; }
 
-/*============================================================== 
- For all pages 
+/*============================================================== 
+ For all pages 
  ============================================================== */
 #main-wrapper {
   width: 100%;
@@ -7736,14 +7736,14 @@ html[dir="ltr"] body .p-l-0 {
   padding: 20px;
   min-height: calc(100vh - 180px); }
 
-/*******************
- Footer
+/*******************
+ Footer
 *******************/
 .footer {
   padding: 15px 20px; }
 
-/*******************
- Stickey inner-left-part
+/*******************
+ Stickey inner-left-part
 *******************/
 .left-part {
   height: 100%;
@@ -7777,8 +7777,8 @@ html[dir="ltr"] body .p-l-0 {
   margin-left: 0px;
   margin-right: 260px; }
 
-/*******************
- Vertical layout
+/*******************
+ Vertical layout
 *******************/
 #main-wrapper[data-layout='vertical'] {
   /*Vertical*/
@@ -7828,8 +7828,8 @@ html[dir="ltr"] body .p-l-0 {
   #main-wrapper[data-layout='vertical'][data-boxed-layout='boxed'][data-header-position='fixed'] .topbar {
     max-width: 1200px; }
 
-/*******************
- Vertical responsive layout
+/*******************
+ Vertical responsive layout
 *******************/
 @media (min-width: 768px) {
   #main-wrapper[data-layout='vertical'] {
@@ -7941,8 +7941,8 @@ a.link {
 .no-wrap th {
   white-space: nowrap; }
 
-/*******************
-Blockquote
+/*******************
+Blockquote
 *******************/
 html body blockquote {
   border-left: 5px solid #7460ee;
@@ -7955,8 +7955,8 @@ html body blockquote {
 ol li {
   margin: 5px 0; }
 
-/*******************
-Thumb size
+/*******************
+Thumb size
 *******************/
 .thumb-sm {
   height: 32px;
@@ -7976,8 +7976,8 @@ Thumb size
 .radius {
   border-radius: 2px; }
 
-/*******************
-Opacity
+/*******************
+Opacity
 *******************/
 .op-5 {
   opacity: 0.5; }
@@ -7985,8 +7985,8 @@ Opacity
 .op-3 {
   opacity: 0.3; }
 
-/*******************
-font weight
+/*******************
+font weight
 *******************/
 html body .font-bold {
   font-weight: 600; }
@@ -8033,8 +8033,8 @@ html body .display-6 {
 html body .display-7 {
   font-size: 2rem; }
 
-/*******************
-Background colors
+/*******************
+Background colors
 *******************/
 html body .bg-megna {
   background-color: #01c0c8; }
@@ -8054,8 +8054,8 @@ html body .bg-light {
 html body .bg-white {
   background-color: #fff; }
 
-/*******************
-Rounds
+/*******************
+Rounds
 *******************/
 .round {
   line-height: 48px;
@@ -8087,14 +8087,14 @@ Rounds
   height: 60px;
   font-size: 30px; }
 
-/*******************
-Labels
+/*******************
+Labels
 *******************/
 .label-rounded {
   border-radius: 60px; }
 
-/*******************
- Badge
+/*******************
+ Badge
 ******************/
 .badge {
   font-weight: 300;
@@ -8112,8 +8112,8 @@ Labels
   -o-transform: translate(0, -2px);
   transform: translate(0, -2px); }
 
-/*******************
-List-style-none
+/*******************
+List-style-none
 ******************/
 ul.list-style-none {
   margin: 0px;
@@ -8128,8 +8128,8 @@ ul.list-style-none {
       ul.list-style-none li a:hover {
         color: #4798e8; }
 
-/*******************
-Card
+/*******************
+Card
 ******************/
 .card {
   margin-bottom: 20px;
@@ -8194,8 +8194,8 @@ Card
   background: #4798e8;
   color: #fff; }
 
-/*******************
-Labels
+/*******************
+Labels
 *******************/
 .label {
   padding: 3px 10px;
@@ -8241,8 +8241,8 @@ Labels
 .label-default {
   background-color: #f8f9fa; }
 
-/*******************
-Preloader
+/*******************
+Preloader
 ********************/
 .preloader {
   width: 100%;
@@ -8289,8 +8289,8 @@ Preloader
     height: 58px;
     opacity: 0; } }
 
-/*******************
-Notify
+/*******************
+Notify
 *******************/
 .notify {
   position: relative;
@@ -8357,8 +8357,8 @@ Notify
     -webkit-transform: scale(1);
     opacity: 0.0; } }
 
-/*******************
- General Topbar
+/*******************
+ General Topbar
 *******************/
 .topbar {
   position: relative;
@@ -8419,8 +8419,8 @@ Notify
     cursor: pointer;
     right: 20px; }
 
-/*******************
-Megamenu
+/*******************
+Megamenu
 ******************/
 .topbar .mega-dropdown {
   position: static; }
@@ -8430,8 +8430,8 @@ Megamenu
     max-height: 480px;
     overflow: auto; }
 
-/*******************
-Designed dropdown
+/*******************
+Designed dropdown
 ******************/
 .topbar .dropdown-menu {
   padding-top: 0px;
@@ -8460,8 +8460,8 @@ Designed dropdown
       right: 20px;
       left: auto; }
 
-/*******************
-Topbar Responsive
+/*******************
+Topbar Responsive
 ******************/
 @media (max-width: 767px) {
   .topbar .top-navbar .navbar-collapse.show,
@@ -8486,14 +8486,14 @@ Topbar Responsive
     .topbar .top-navbar .dropdown-menu .with-arrow {
       display: none; } }
 
-/*
-Template Name: Admin Template
-Author: Wrappixel
-
-File: scss
+/*
+Template Name: Admin Template
+Author: Wrappixel
+
+File: scss
 */
-/*******************
-Table Cell
+/*******************
+Table Cell
 *******************/
 .table-box {
   display: table;
@@ -8517,8 +8517,8 @@ Table Cell
 .v-middle th {
   vertical-align: middle; }
 
-/*******************
-Table td vertical middle
+/*******************
+Table td vertical middle
 *******************/
 .vm.table td,
 .vm.table th {
@@ -8530,8 +8530,8 @@ Table td vertical middle
 .table.no-border tbody td {
   border: 0px; }
 
-/*******************
-Table-Jsgrid table
+/*******************
+Table-Jsgrid table
 ******************/
 .jsgrid-pager-page a,
 .jsgrid-pager-current-page,
@@ -8563,8 +8563,8 @@ Table-Jsgrid table
 .jsgrid-pager-page.jsgrid-pager-current-page {
   padding: 0.5em 1em !important; }
 
-/*******************
- Breadcrumb and page title
+/*******************
+ Breadcrumb and page title
 *******************/
 .page-breadcrumb {
   padding: 20px 20px 0 20px; }
@@ -8581,8 +8581,8 @@ Table-Jsgrid table
       color: #ced4da;
       font-size: 11px; }
 
-/*******************
-Main sidebar
+/*******************
+Main sidebar
 ******************/
 .left-sidebar {
   position: absolute;
@@ -8595,20 +8595,20 @@ Main sidebar
   background: #fff;
   transition: 0.2s ease-in; }
 
-/*******************
-sidebar navigation
+/*******************
+sidebar navigation
 ******************/
 .scroll-sidebar {
   height: calc(100% - 20px);
   position: relative; }
 
 .sidebar-nav ul {
-  /*******************
-         Small cap
+  /*******************
+         Small cap
          ******************/ }
   .sidebar-nav ul .sidebar-item {
-    /*******************
-      First level
+    /*******************
+      First level
       ******************/ }
     .sidebar-nav ul .sidebar-item .sidebar-link {
       color: #fff;
@@ -8655,8 +8655,8 @@ sidebar navigation
       line-height: 30px;
       margin: 0 5px; }
 
-/*******************
- common m-p removed
+/*******************
+ common m-p removed
 ******************/
 .sidebar-nav ul {
   margin: 0px;
@@ -8674,8 +8674,8 @@ sidebar navigation
 .collapse.in {
   display: block; }
 
-/*******************
-Down arrow
+/*******************
+Down arrow
 ******************/
 .sidebar-nav .has-arrow {
   position: relative; }
@@ -8712,8 +8712,8 @@ Down arrow
   -o-transform: rotate(-135deg) translate(0, -50%);
   transform: rotate(-135deg) translate(0, -50%); }
 
-/*******************
-User Profile
+/*******************
+User Profile
 ******************/
 .user-profile {
   padding: 15px;
@@ -8740,8 +8740,8 @@ User Profile
     width: 220px;
     margin-top: 70px; }
 
-/*******************
-Wave Effects
+/*******************
+Wave Effects
 *******************/
 .waves-effect {
   position: relative;
@@ -8967,8 +8967,8 @@ html body .waves-notransition {
 .btn.active .text {
   display: none; }
 
-/*******************
-customizer
+/*******************
+customizer
 *******************/
 .customizer {
   background: #fff;
@@ -9034,12 +9034,12 @@ customizer
       .theme-color .theme-item .theme-link[data-logobg="skin6"], .theme-color .theme-item .theme-link[data-navbarbg="skin6"], .theme-color .theme-item .theme-link[data-sidebarbg="skin6"] {
         background: #e9ecef; }
 
-/*!
- * animate.css -http://daneden.me/animate
- * Version - 3.5.1
- * Licensed under the MIT license - http://opensource.org/licenses/MIT
- *
- * Copyright (c) 2016 Daniel Eden
+/*!
+ * animate.css -http://daneden.me/animate
+ * Version - 3.5.1
+ * Licensed under the MIT license - http://opensource.org/licenses/MIT
+ *
+ * Copyright (c) 2016 Daniel Eden
  */
 .animated {
   -webkit-animation-duration: 1s;
@@ -11534,10 +11534,10 @@ customizer
   -moz-transition: background-color .2s linear, opacity .2s linear;
   transition: background-color .2s linear, opacity .2s linear; }
 
-/*
-Template Name: Admin Template
-Author: Niravjoshi / Wrappixel
-File: scss
+/*
+Template Name: Admin Template
+Author: Niravjoshi / Wrappixel
+File: scss
 */
 html body .jqstooltip,
 html body .flotTip {
@@ -11795,18 +11795,18 @@ label {
   float: right; }
 
 html[dir="rtl"] {
-  /*******************
-Padding margin property 
+  /*******************
+Padding margin property 
 *******************/
   /** * Zero */
   /* Stickey inner-left-part */
   /* plugins */
-  /*.sl-icon i,
-    [class*=" ti-"],
-    [class^=ti-] {
-        float: right;
-        margin-left: 10px;
-        line-height: 20px;
+  /*.sl-icon i,
+    [class*=" ti-"],
+    [class^=ti-] {
+        float: right;
+        margin-left: 10px;
+        line-height: 20px;
     }*/
   /* Vertical responsive layout */ }
   html[dir="rtl"] body .m-t-5 {
@@ -12227,24 +12227,24 @@ Padding margin property
 
 /* ***************************** */
 /* ***************************** */
-/* *
- * Table Of Content
- *
- *  1. Color system
- *  2. Options
- *  3. Body
- *  4. Typography
- *  5. Breadcrumbs
- *  6. Cards
- *  7. Dropdowns
- *  8. Buttons
- *  9. Typography
- *  10. Progress bars
- *  11. Tables
- *  12. Forms
+/* *
+ * Table Of Content
+ *
+ *  1. Color system
+ *  2. Options
+ *  3. Body
+ *  4. Typography
+ *  5. Breadcrumbs
+ *  6. Cards
+ *  7. Dropdowns
+ *  8. Buttons
+ *  9. Typography
+ *  10. Progress bars
+ *  11. Tables
+ *  12. Forms
  *  14. Component */
-/*******************
- Campaign
+/*******************
+ Campaign
 *******************/
 @keyframes dasharray-craziness {
   0% {
@@ -12293,21 +12293,21 @@ Padding margin property
 
 /* ***************************** */
 /* ***************************** */
-/* *
- * Table Of Content
- *
- *  1. Color system
- *  2. Options
- *  3. Body
- *  4. Typography
- *  5. Breadcrumbs
- *  6. Cards
- *  7. Dropdowns
- *  8. Buttons
- *  9. Typography
- *  10. Progress bars
- *  11. Tables
- *  12. Forms
+/* *
+ * Table Of Content
+ *
+ *  1. Color system
+ *  2. Options
+ *  3. Body
+ *  4. Typography
+ *  5. Breadcrumbs
+ *  6. Cards
+ *  7. Dropdowns
+ *  8. Buttons
+ *  9. Typography
+ *  10. Progress bars
+ *  11. Tables
+ *  12. Forms
  *  14. Component */
 .auth-wrapper {
   min-height: 100vh;
@@ -12367,21 +12367,21 @@ Padding margin property
 
 /* ***************************** */
 /* ***************************** */
-/* *
- * Table Of Content
- *
- *  1. Color system
- *  2. Options
- *  3. Body
- *  4. Typography
- *  5. Breadcrumbs
- *  6. Cards
- *  7. Dropdowns
- *  8. Buttons
- *  9. Typography
- *  10. Progress bars
- *  11. Tables
- *  12. Forms
+/* *
+ * Table Of Content
+ *
+ *  1. Color system
+ *  2. Options
+ *  3. Body
+ *  4. Typography
+ *  5. Breadcrumbs
+ *  6. Cards
+ *  7. Dropdowns
+ *  8. Buttons
+ *  9. Typography
+ *  10. Progress bars
+ *  11. Tables
+ *  12. Forms
  *  14. Component */
 .email-app {
   position: relative; }
@@ -12456,21 +12456,21 @@ Padding margin property
 
 /* ***************************** */
 /* ***************************** */
-/* *
- * Table Of Content
- *
- *  1. Color system
- *  2. Options
- *  3. Body
- *  4. Typography
- *  5. Breadcrumbs
- *  6. Cards
- *  7. Dropdowns
- *  8. Buttons
- *  9. Typography
- *  10. Progress bars
- *  11. Tables
- *  12. Forms
+/* *
+ * Table Of Content
+ *
+ *  1. Color system
+ *  2. Options
+ *  3. Body
+ *  4. Typography
+ *  5. Breadcrumbs
+ *  6. Cards
+ *  7. Dropdowns
+ *  8. Buttons
+ *  9. Typography
+ *  10. Progress bars
+ *  11. Tables
+ *  12. Forms
  *  14. Component */
 .lobilists .lobilist {
   box-shadow: none; }
@@ -12576,21 +12576,21 @@ Padding margin property
 
 /* ***************************** */
 /* ***************************** */
-/* *
- * Table Of Content
- *
- *  1. Color system
- *  2. Options
- *  3. Body
- *  4. Typography
- *  5. Breadcrumbs
- *  6. Cards
- *  7. Dropdowns
- *  8. Buttons
- *  9. Typography
- *  10. Progress bars
- *  11. Tables
- *  12. Forms
+/* *
+ * Table Of Content
+ *
+ *  1. Color system
+ *  2. Options
+ *  3. Body
+ *  4. Typography
+ *  5. Breadcrumbs
+ *  6. Cards
+ *  7. Dropdowns
+ *  8. Buttons
+ *  9. Typography
+ *  10. Progress bars
+ *  11. Tables
+ *  12. Forms
  *  14. Component */
 .twitter-typeahead {
   width: 100%; }
@@ -12629,11 +12629,11 @@ Padding margin property
 .bootstrap-maxlength {
   margin-top: .5rem; }
 
-/*
-Template Name: Admin Template
-Author: Wrappixel
-
-File: scss
+/*
+Template Name: Admin Template
+Author: Wrappixel
+
+File: scss
 */
 /*******************************/
 /*******************************/
@@ -12656,24 +12656,24 @@ File: scss
 
 /* ***************************** */
 /* ***************************** */
-/* *
- * Table Of Content
- *
- *  1. Color system
- *  2. Options
- *  3. Body
- *  4. Typography
- *  5. Breadcrumbs
- *  6. Cards
- *  7. Dropdowns
- *  8. Buttons
- *  9. Typography
- *  10. Progress bars
- *  11. Tables
- *  12. Forms
+/* *
+ * Table Of Content
+ *
+ *  1. Color system
+ *  2. Options
+ *  3. Body
+ *  4. Typography
+ *  5. Breadcrumbs
+ *  6. Cards
+ *  7. Dropdowns
+ *  8. Buttons
+ *  9. Typography
+ *  10. Progress bars
+ *  11. Tables
+ *  12. Forms
  *  14. Component */
-/*******************
-User card page
+/*******************
+User card page
 ******************/
 .el-element-overlay .white-box {
   padding: 0px; }
@@ -12759,11 +12759,11 @@ User card page
     top: 0px;
     height: 100%; }
 
-/*
-Template Name: Admin Template
-Author: Wrappixel
-
-File: scss
+/*
+Template Name: Admin Template
+Author: Wrappixel
+
+File: scss
 */
 /*******************************/
 /*******************************/
@@ -12786,24 +12786,24 @@ File: scss
 
 /* ***************************** */
 /* ***************************** */
-/* *
- * Table Of Content
- *
- *  1. Color system
- *  2. Options
- *  3. Body
- *  4. Typography
- *  5. Breadcrumbs
- *  6. Cards
- *  7. Dropdowns
- *  8. Buttons
- *  9. Typography
- *  10. Progress bars
- *  11. Tables
- *  12. Forms
+/* *
+ * Table Of Content
+ *
+ *  1. Color system
+ *  2. Options
+ *  3. Body
+ *  4. Typography
+ *  5. Breadcrumbs
+ *  6. Cards
+ *  7. Dropdowns
+ *  8. Buttons
+ *  9. Typography
+ *  10. Progress bars
+ *  11. Tables
+ *  12. Forms
  *  14. Component */
-/*******************
-google map Page
+/*******************
+google map Page
 ******************/
 .gmaps, .gmaps-panaroma {
   height: 300px; }
@@ -12842,8 +12842,8 @@ google map Page
   border-right: 16px solid transparent;
   border-bottom: 16px solid #4798e8; }
 
-/*******************
-vector map Page
+/*******************
+vector map Page
 ******************/
 .jvectormap-zoomin, .jvectormap-zoomout {
   width: 10px;
@@ -12853,11 +12853,11 @@ vector map Page
 .jvectormap-zoomout {
   top: 40px; }
 
-/*
-Template Name: Admin Template
-Author: Wrappixel
-
-File: scss
+/*
+Template Name: Admin Template
+Author: Wrappixel
+
+File: scss
 */
 /*******************************/
 /*******************************/
@@ -12880,24 +12880,24 @@ File: scss
 
 /* ***************************** */
 /* ***************************** */
-/* *
- * Table Of Content
- *
- *  1. Color system
- *  2. Options
- *  3. Body
- *  4. Typography
- *  5. Breadcrumbs
- *  6. Cards
- *  7. Dropdowns
- *  8. Buttons
- *  9. Typography
- *  10. Progress bars
- *  11. Tables
- *  12. Forms
+/* *
+ * Table Of Content
+ *
+ *  1. Color system
+ *  2. Options
+ *  3. Body
+ *  4. Typography
+ *  5. Breadcrumbs
+ *  6. Cards
+ *  7. Dropdowns
+ *  8. Buttons
+ *  9. Typography
+ *  10. Progress bars
+ *  11. Tables
+ *  12. Forms
  *  14. Component */
-/*******************
-Timeline page
+/*******************
+Timeline page
 ******************/
 .timeline {
   position: relative;
@@ -13036,8 +13036,8 @@ Timeline page
 .timeline-right > .timeline-item > .timeline-panel {
   width: calc(100% - 80px); }
 
-/*******************
-Horizontal Timeline page
+/*******************
+Horizontal Timeline page
 ******************/
 .cd-horizontal-timeline .events a {
   padding-bottom: 6px;
@@ -13074,21 +13074,21 @@ Horizontal Timeline page
 
 /* ***************************** */
 /* ***************************** */
-/* *
- * Table Of Content
- *
- *  1. Color system
- *  2. Options
- *  3. Body
- *  4. Typography
- *  5. Breadcrumbs
- *  6. Cards
- *  7. Dropdowns
- *  8. Buttons
- *  9. Typography
- *  10. Progress bars
- *  11. Tables
- *  12. Forms
+/* *
+ * Table Of Content
+ *
+ *  1. Color system
+ *  2. Options
+ *  3. Body
+ *  4. Typography
+ *  5. Breadcrumbs
+ *  6. Cards
+ *  7. Dropdowns
+ *  8. Buttons
+ *  9. Typography
+ *  10. Progress bars
+ *  11. Tables
+ *  12. Forms
  *  14. Component */
 .dd {
   position: relative;
@@ -13284,19 +13284,19 @@ Horizontal Timeline page
   color: #67757c;
   top: 7px; }
 
-/*
-Template Name: Admin Template
-Author: Wrappixel
-
-File: scss
+/*
+Template Name: Admin Template
+Author: Wrappixel
+
+File: scss
 */
-/*
-Template Name: Admin Template
-Author: Wrappixel
-
-File: scss
+/*
+Template Name: Admin Template
+Author: Wrappixel
+
+File: scss
 */
-/*******************
+/*******************
 /*User mail widgets*/
 /*******************/
 .mailbox .drop-title {
@@ -13743,17 +13743,17 @@ File: scss
   font-size: 12px;
   color: #a1aab2; }
 
-/*
-Template Name: Admin Template
-Author: Niravjoshi / Wrappixel
-File: scss
+/*
+Template Name: Admin Template
+Author: Niravjoshi / Wrappixel
+File: scss
 */
 #main-wrapper[data-layout='horizontal'] {
-  /****************************
-    This is for the fixed header layout
+  /****************************
+    This is for the fixed header layout
     ***************************/
-  /****************************
-    This is for the fixed sidebar layout
+  /****************************
+    This is for the fixed sidebar layout
     ***************************/ }
   #main-wrapper[data-layout='horizontal'][data-header-position='fixed'] .topbar {
     position: fixed;
@@ -13769,17 +13769,17 @@ File: scss
   #main-wrapper[data-layout='horizontal'][data-sidebar-position='fixed'] .page-wrapper {
     padding-top: 78px; }
 
-/****************************
-This is for the horizontal layout
+/****************************
+This is for the horizontal layout
 ***************************/
 @media (min-width: 768px) {
   #main-wrapper[data-layout='horizontal'] {
     background: #fff;
-    /****************************
-        This is for the Boxed horizontal layout
+    /****************************
+        This is for the Boxed horizontal layout
         ***************************/
-    /****************************
-        This is for the horizontal layout
+    /****************************
+        This is for the horizontal layout
         ***************************/ }
     #main-wrapper[data-layout='horizontal'] .topbar {
       transition: 0s; }
@@ -13898,36 +13898,36 @@ This is for the horizontal layout
     display: none; }
   #main-wrapper[data-layout='horizontal'] .sidebar-nav #sidebarnav > .sidebar-item {
     flex: auto; }
-  /****************************
-    This is for the fixed sidebar layout
+  /****************************
+    This is for the fixed sidebar layout
     ***************************/
   [data-sidebar-position='fixed'] .left-sidebar {
     overflow: auto; } }
 
-/*
-Template Name: Admin Template
-Author: Wrappixel
-
-File: scss
+/*
+Template Name: Admin Template
+Author: Wrappixel
+
+File: scss
 */
-/*============================================================== 
- For Desktop & above all (1650px) 
+/*============================================================== 
+ For Desktop & above all (1650px) 
  ============================================================== */
-/*============================================================== 
- For Laptop & above all (1370px) 
+/*============================================================== 
+ For Laptop & above all (1370px) 
  ============================================================== */
-/*-- ============================================================== 
- Small Desktop & above all (1024px) 
+/*-- ============================================================== 
+ Small Desktop & above all (1024px) 
  ============================================================== */
-/*-- ============================================================== 
- Ipad & above all(768px) 
+/*-- ============================================================== 
+ Ipad & above all(768px) 
  ============================================================== */
 @media (min-width: 768px) {
   .bc-content {
     justify-content: flex-end; } }
 
-/*-- ============================================================== 
- Phone and below ipad(767px) 
+/*-- ============================================================== 
+ Phone and below ipad(767px) 
  ============================================================== */
 @media (max-width: 991.98px) {
   .do-block {

@@ -67,6 +67,8 @@ class Offers_api extends CI_Model{
                 		    $data1['product_banner'] = $query2['product_banner_image'];
                 		   
     						$offerproducts[] = $data1;
+    						
+    						return array("status"=>$status,"offer"=>$offerproducts);
                                 
                         }  
     	             }
