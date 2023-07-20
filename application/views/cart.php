@@ -193,6 +193,18 @@
 								<label class="radio-inline">
 								  <input type="radio" name="order_type" id="deliveryonce" class="delType" value="deliveryonce">&nbsp; DELIVER ONCE
 								</label>
+
+								<div class="pl-2 displaysubscriptionType">
+									<label class="radio-inline">
+									<input type="radio" name="subscription_days_count" class="subscriptionType" value="30" checked>&nbsp; Monthly
+									</label>
+									<label class="radio-inline">
+									<input type="radio" name="subscription_days_count" class="subscriptionType" value="15">&nbsp; 15 Days
+									</label>
+									<label class="radio-inline">
+									<input type="radio" name="subscription_days_count" class="subscriptionType" value="7">&nbsp; Weekly
+									</label>
+								</div>
 								
 								
 						
@@ -547,6 +559,11 @@
 
 
 <script type="text/javascript">
+
+	$(".subscriptionType").change(function(){
+		$("#start-date").val("")
+		$("#end-date").val("")
+	})
 	
 $(document).ready(function(){
     
@@ -996,15 +1013,20 @@ $( function() {
         dates.not(this).datepicker("option", option, date);
 
             var date2 = $('#start-date').datepicker('getDate');
-            date2.setDate(date2.getDate()+29);
+
+			var subCount = $("input[name='subscription_days_count']:checked").val();
+			
+			var addDates = parseInt(subCount) - 1;
+
+            date2.setDate(date2.getDate()+addDates);
 	  
 	  		var endDate = formatDate(date2);	
 	  	
          	$('#end-date').val(endDate);
 	  
-	  		var totalPrice = Math.round(parseFloat($("#totalCount").val()) * 30);
+	  		var totalPrice = Math.round(parseFloat($("#totalCount").val()) * parseInt(subCount));
 	  
-	  		var totalGST = Math.round(parseFloat($("#gstCharges").val()) * 30);
+	  		var totalGST = Math.round(parseFloat($("#gstCharges").val()) * parseInt(subCount));
 	  
 	  
 	  		var totalDelivery = <? echo isset($sdeliveryCharges) ? $sdeliveryCharges : 0 ?>;
@@ -1152,71 +1174,74 @@ $(document).ready(function(){
 	
 $("#deliveryonce").click(function(){
         
-		$("#delshift").val("");
-		$("#subshift").val("");
-		
-        $("#updel").toggle();
-        $("#upsub").hide();
-		
-		$("#delivery-date").attr('required', 'required');
-		$("#delshift").attr('required', 'required');
-		$("#start-date").removeAttr('required', 'required');
-		$("#end-date").removeAttr('required', 'required');
-		$("#subshift").removeAttr('required', 'required');
-		
-		
-		$("#start-date").val("");
-		$("#end-date").val("");
-		
-		var updelcharges = $("#deliveryAmt").val($("#deAmt").val());
-		
-		
-		var dTotal = $("#totalCount").val();
-		var dGst = $("#gstCharges").val();
-		
-		
-		var totalDelivery = parseFloat($("#deliveryAmt").val());
-		var deliveryCutoff = parseFloat($("#deliveryCutoff").val());
-		
-		var total = parseFloat(dTotal)+parseFloat(dGst);
-		
+	$(".displaysubscriptionType").hide();
+	$("#delshift").val("");
+	$("#subshift").val("");
+	
+	$("#updel").toggle();
+	$("#upsub").hide();
+	
+	$("#delivery-date").attr('required', 'required');
+	$("#delshift").attr('required', 'required');
+	$("#start-date").removeAttr('required', 'required');
+	$("#end-date").removeAttr('required', 'required');
+	$("#subshift").removeAttr('required', 'required');
+	
+	
+	$("#start-date").val("");
+	$("#end-date").val("");
+	
+	var updelcharges = $("#deliveryAmt").val($("#deAmt").val());
+	
+	
+	var dTotal = $("#totalCount").val();
+	var dGst = $("#gstCharges").val();
+	
+	
+	var totalDelivery = parseFloat($("#deliveryAmt").val());
+	var deliveryCutoff = parseFloat($("#deliveryCutoff").val());
+	
+	var total = parseFloat(dTotal)+parseFloat(dGst);
+	
 //		alert(total+" "+deliveryCutoff);
-		
-		if(total < deliveryCutoff){
+	
+	if(total < deliveryCutoff){
 
-			var delCharges = totalDelivery;
-			var udelCharges = totalDelivery;
-			var gTotal = total + parseFloat(totalDelivery);
+		var delCharges = totalDelivery;
+		var udelCharges = totalDelivery;
+		var gTotal = total + parseFloat(totalDelivery);
 
-		}else{
+	}else{
 
-			var delCharges = "Free";
-			var udelCharges = 0;
-			var gTotal = total;
-		}
+		var delCharges = "Free";
+		var udelCharges = 0;
+		var gTotal = total;
+	}
+	
+	if($("#start-date").val() == ""){
 		
-		if($("#start-date").val() == ""){
-			
-	  		$(".totalPrice2").html('&#8377;'+dTotal+'');
-	  		$(".totalPrice1").html('&#8377;'+gTotal+'');
-	  		$(".gstAmount").html('&#8377;'+dGst+'');
-			$(".delCharges").html('&#8377;'+delCharges+'');
-	  
-	  
-	  		$("#deliveryAmt").val(udelCharges);
-	  		$("#totalAmount").val(gTotal);
-	  		$("#gstAmt").val(dGst);
-		}
-		
-	  $(".tQty").hide();
-	  $(".dotQty").show();
-		
-	  checkOffer();		
+		$(".totalPrice2").html('&#8377;'+dTotal+'');
+		$(".totalPrice1").html('&#8377;'+gTotal+'');
+		$(".gstAmount").html('&#8377;'+dGst+'');
+		$(".delCharges").html('&#8377;'+delCharges+'');
+	
+	
+		$("#deliveryAmt").val(udelCharges);
+		$("#totalAmount").val(gTotal);
+		$("#gstAmt").val(dGst);
+	}
+	
+	$(".tQty").hide();
+	$(".dotQty").show();
+	
+	checkOffer();		
 		
         
-    });
+});
 	
 $("#subscritption").click(function(){
+
+		$(".displaysubscriptionType").show();
   		$("#delshift").val("");
 		$("#subshift").val("");
 
