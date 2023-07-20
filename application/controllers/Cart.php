@@ -144,6 +144,7 @@ public function insertOrder(){
 	$sub_start_date = $this->input->post("sub_start_date",true);
 	$sub_end_date = $this->input->post("sub_end_date",true);
 	$deliveryonce_date = $this->input->post("delivery_date",true);
+	$subscription_days_count = $this->input->post("subscription_days_count",true);
 	$date_of_order = date("Y-m-d H:i:s");
 	$order_status = "pending";
 	$payment_status = "pending";
@@ -350,7 +351,8 @@ public function insertOrder(){
 			"date_of_order" => date("Y-m-d H:i:s"),
 			"deliveryCharges" => $deliveryCharges,
 			"deliveryShift" => $shift,
-			"hasOffer" => $hasOffer
+			"hasOffer" => $hasOffer,
+			"subscription_days_count" => $subscription_days_count
 	   );
 	
 
