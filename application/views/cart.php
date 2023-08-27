@@ -193,7 +193,7 @@
 								<label class="radio-inline">
 								  <input type="radio" name="order_type" id="deliveryonce" class="delType" value="deliveryonce">&nbsp; DELIVER ONCE
 								</label>
-
+								<hr />
 								<div class="pl-2 displaysubscriptionType">
 									<label class="radio-inline">
 									<input type="radio" name="subscription_days_count" class="subscriptionType" value="30" checked>&nbsp; Monthly
@@ -203,6 +203,9 @@
 									</label>
 									<label class="radio-inline">
 									<input type="radio" name="subscription_days_count" class="subscriptionType" value="7">&nbsp; Weekly
+									</label>
+									<label class="radio-inline">
+									<input type="radio" name="subscription_days_count" class="subscriptionType" value="alternate">&nbsp; Alternate Days
 									</label>
 								</div>
 								
@@ -288,15 +291,13 @@
 							    </div> -->
 							    <div class="col-md-6">
 							        <div class="form-group">
-    							        <input type="radio" name="payment_type" id="ccav" value="ccavenue">
+    							        <input type="radio" name="payment_type" id="ccav" value="ccavenue" checked>
     							        <label for="ccav"><img src="<? echo base_url('assets/ccavenue.png') ?>" width="100%"></label>
     							     </div>   
 							    </div>
 							</div>
 							
-						
-							
-									
+		
 						</div>
 						
 						<h5>Quantity</h5>
@@ -398,7 +399,7 @@
 						
 						<?php 
 						 
-						 	$ci = $this->cart->contents(); 
+						 	$ci = $this->cart->contents();
 							
 						 	$gstPrice = array();
 							$nGst = array();	
@@ -563,6 +564,7 @@
 	$(".subscriptionType").change(function(){
 		$("#start-date").val("")
 		$("#end-date").val("")
+		checkOffer()
 	})
 	
 $(document).ready(function(){
@@ -608,6 +610,7 @@ $(document).ready(function(){
 		
 		type : "post",
 		data : {total : totalAmount,orderType : delType},
+		dataType: "json",
 		url : "<? echo base_url('cart/check_value_offer_on_this_day') ?>",
 		success : function(data){
 			console.log(data);
@@ -1016,17 +1019,18 @@ $( function() {
 
 			var subCount = $("input[name='subscription_days_count']:checked").val();
 			
-			var addDates = parseInt(subCount) - 1;
+			var addDates = subCount == 'alternate' ? 29 : parseInt(subCount) - 1;
 
             date2.setDate(date2.getDate()+addDates);
 	  
 	  		var endDate = formatDate(date2);	
 	  	
          	$('#end-date').val(endDate);
+			var sVal = subCount == 'alternate' ? 29 : subCount;
 	  
-	  		var totalPrice = Math.round(parseFloat($("#totalCount").val()) * parseInt(subCount));
+	  		var totalPrice = Math.round(parseFloat($("#totalCount").val()) * parseInt(sVal));
 	  
-	  		var totalGST = Math.round(parseFloat($("#gstCharges").val()) * parseInt(subCount));
+	  		var totalGST = Math.round(parseFloat($("#gstCharges").val()) * parseInt(sVal));
 	  
 	  
 	  		var totalDelivery = <? echo isset($sdeliveryCharges) ? $sdeliveryCharges : 0 ?>;
@@ -1321,32 +1325,43 @@ function checkOffer(){
 	
 	
 	var delType = $("input[name='order_type']:checked").val();
+	var subscription_days_count = $("input[name='subscription_days_count']:checked").val();
 	var totalAmount = $("#totalAmount").val();
 		
 	$.ajax({
 		
 		type : "post",
-		data : {total : totalAmount,orderType : delType},
+		data : {total : totalAmount,orderType : delType, subscription_days_count: subscription_days_count},
 		url : "<? echo base_url('cart/check_value_offer_on_this_day') ?>",
+		dataType: "json",
 		success : function(data){
 			console.log(data);
-
-//			if(data == "success"){
-//				alert();
-//				$("#cartProducts").load("<? echo base_url('cart/cartProducts') ?>");
-//				
-//			}else{
-//				
-//				return false;
-//			}
-			
+			$("#discount").hide();
+				
 			$("#cartProducts").load("<? echo base_url('cart/cartProducts') ?>");
+			if(parseInt(data.discount) > 0){
 
+				var disTTotal = parseFloat(data.discount);
+				
+				$("#discount").show();
+				$(".disAmount").html('&#8377;'+data.discount);
+				$("#promoDisamount").val(data.discount)
+				
+				var gTotal = (parseFloat(data.total) + parseFloat(data.discount))
+
+	  			$(".totalPrice1").html('&#8377;'+data.total);
+	  			$(".totalPrice2").html('&#8377;'+gTotal);
+	  			$("#totalAmount").val(data.total);
+
+			}
 			
 		},
 		error : function(data){
 			
 			console.log(data);
+			$("#discount").hide();
+			$(".disAmount").html('&#8377;'+0);
+			$("#promoDisamount").val(0)
 		}
 		
 	});

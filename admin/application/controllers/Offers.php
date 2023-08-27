@@ -264,6 +264,11 @@ public function productOffers()
 	{
 		$this->load->view('productOffers/productOffers');
 	}
+
+	public function subscribeOffers()
+	{
+		$this->load->view('subscribeOffers/subscribeOffers');
+	}	
 	
 	
 public function insertCrossoffer(){
@@ -450,9 +455,6 @@ public function delCrossoffer($id){
 	}
 }	
 	
-	
-	
-
 public function insertCrossproduct(){
 
 	$loc_name = $this->input->post("pname",true);
@@ -582,10 +584,178 @@ public function delProduct($id){
 	}
 }
 	
+// subscription offers
+
+public function insertSubscriptionoffer(){
+
+	$loc_name = $this->input->post("location",true);
+	$offerType = $this->input->post("offerType",true);
+	$startDate = $this->input->post("startDate",true);
+	$endDate = $this->input->post("endDate",true);
+	$orderType = $this->input->post("subscriptionType",true);
+	$inProduct = $this->input->post("inProduct",true);
+	$inQty = $this->input->post("inQty",true);
+	$description = $this->input->post("description",true);
+
+	$config['upload_path']          = "uploads/crossProducts/";
+	$config['allowed_types']        = 'gif|jpg|png|jpeg';
+
+	$this->load->library('upload', $config);
+
+	if($this->upload->do_upload("image")){
+
+	$d=$this->upload->data();
+
+		$icon = "uploads/crossProducts/".$d['file_name'];
+
+	}else{
+
+		$this->alert->pnotify("error","Please Select Valid Image","error");
+		redirect("offers/subscribeOffers");
+
+	}
 	
+ 	$data = array(
+ 		
+ 		"city" => $loc_name,
+ 		"from_date" => $startDate,
+		"to_date" => $endDate,
+		"subscriptionType" => $orderType,
+		"inputProduct" => $inProduct,
+		"inputQty" => $inQty,
+		"offerType" => $offerType,
+		"description" => $description,
+		"banner" => $icon,
+ 
+ 	);	
+
+ 	$sn = $this->db->insert("tbl_subscription_offers",$data);
+
+ 	if($sn){
+
+ 			$this->alert->pnotify("success","Offer Successfully Added","success");
+			redirect("offers/subscribeOffers");
+	}else{
+			
+			$this->alert->pnotify("error","Error Occured While Adding Offer","error");
+			redirect("offers/subscribeOffers");
+	}
+}
+
+public function subscribeofferstatus(){
+
+	$id=$this->input->post_get("id",true);
+	$status = $this->input->post("status",true);
+	$data=array('status'=>$status);
+
+	$this->db->set($data);
+	$this->db->where("id",$id);
+	$d=$this->db->update("tbl_subscription_offers");
+
+	if($d){
+		if($status=="Active"){
+			echo 1;
+			//echo $this->alert->pnotify("Success","Successfully Social Site Enabled","success");
+		}else{
+			echo 0;
+			//echo $this->alert->pnotify("Success","Successfully Social Site Disabled","success");	
+		}
+
+	}else{
+		if($status=="Inactive"){
+			echo 2;
+			//echo $this->alert->pnotify("Error","Error Occured While Enabling Social Site","error");
+		}else{
+			echo 3;
+			//echo $this->alert->pnotify("Error","Error Occured While Disabling Social Site","error");
+		}	
+	}	
+}
+
+public function editSubscriptionoffer($id){
 	
+	$data["oo"] = $this->db->get_where("tbl_subscription_offers",array("id"=>$id))->row();
+	$this->load->view('subscribeOffers/subscribeOffers',$data);
 	
+}
+
+public function updateSubscriptionoffer(){
+
+	$id = $this->input->post("id",true);
+	$loc_name = $this->input->post("location",true);
+	$offerType = $this->input->post("offerType",true);
+	$startDate = $this->input->post("startDate",true);
+	$endDate = $this->input->post("endDate",true);
+	$orderType = $this->input->post("subscriptionType",true);
+	$inProduct = $this->input->post("inProduct",true);
+	$inQty = $this->input->post("inQty",true);
+	$description = $this->input->post("description",true);
+
+	$schk = $this->db->get_where("tbl_subscription_offers",array("id"=>$id))->row();
 	
+	if($_FILES['image']['size']!='0'){
+	  	$config['upload_path']          = "uploads/crossProducts/";
+        $config['allowed_types']        = 'gif|jpg|png|jpeg';
+		
+        $this->load->library('upload', $config);
+		
+		if($this->upload->do_upload("image")){
+		
+		$d=$this->upload->data();
+		
+ 		$icon = "uploads/crossProducts/".$d['file_name'];
+ 	
+ 		unlink($schk->banner);
+ 		}else{
+
+ 			$this->alert->pnotify("error","Please Select Valid Image","error");
+			redirect("offers/subscribeOffers");
+
+ 		}
+
+ 	}else{
+ 		$icon = $schk->banner;
+ 	}	
 	
+ 	$data = array(
+ 		
+ 		"city" => $loc_name,
+ 		"from_date" => $startDate,
+		"to_date" => $endDate,
+		"subscriptionType" => $orderType,
+		"inputProduct" => $inProduct,
+		"inputQty" => $inQty,
+		"offerType" => $offerType,
+		"description" => $description,
+		"banner" => $icon,
+ 
+ 	);	
+
+ 	$sn = $this->db->where("id",$id)->update("tbl_subscription_offers",$data);
+
+ 	if($sn){
+
+ 			$this->alert->pnotify("success","Offer Successfully Updated","success");
+			redirect("offers/subscribeOffers");
+	}else{
+			
+			$this->alert->pnotify("error","Error Occured While Updating Offer","error");
+			redirect("offers/subscribeOffers");
+	}
+}
+
+public function delSubscriptionoffer($id){
+
+	$d = $this->db->delete("tbl_subscription_offers",array("id"=>$id));
+
+	if($d){
+			$this->alert->pnotify("success","offer Successfully Deleted","success");
+			redirect("offers/subscribeOffers");
+	}else{
+
+			$this->alert->pnotify("error","Error Occured While Deleting offer","error");
+			redirect("offers/subscribeOffers");
+	}
+}	
 
 }
