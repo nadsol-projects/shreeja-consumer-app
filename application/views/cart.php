@@ -1,6 +1,6 @@
 <?php 
-	front_inner_header(); 
 
+	front_inner_header(); 
 	date_default_timezone_set("Asia/Kolkata");
 
 ?>
@@ -1019,14 +1019,14 @@ $( function() {
 
 			var subCount = $("input[name='subscription_days_count']:checked").val();
 			
-			var addDates = subCount == 'alternate' ? 29 : parseInt(subCount) - 1;
+			var addDates = subCount == 'alternate' ? 58 : parseInt(subCount) - 1;
 
             date2.setDate(date2.getDate()+addDates);
 	  
 	  		var endDate = formatDate(date2);	
 	  	
          	$('#end-date').val(endDate);
-			var sVal = subCount == 'alternate' ? 29 : subCount;
+			var sVal = subCount == 'alternate' ? 30 : subCount;
 	  
 	  		var totalPrice = Math.round(parseFloat($("#totalCount").val()) * parseInt(sVal));
 	  
@@ -1362,6 +1362,7 @@ function checkOffer(){
 			$("#discount").hide();
 			$(".disAmount").html('&#8377;'+0);
 			$("#promoDisamount").val(0)
+			$("#cartProducts").load("<? echo base_url('cart/cartProducts') ?>");
 		}
 		
 	});

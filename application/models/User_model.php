@@ -47,18 +47,33 @@ class User_model extends CI_Model{
     		
     		if($odata->order_type == "subscribe"){
     		    
-    		  	 $begin = new DateTime( $odata->sub_start_date );
-    			 $end   = new DateTime( $odata->sub_end_date );
-    			
-    				for($i = $begin; $i <= $end; $i->modify('+1 day')){
-    					
-    					$ddate = $i->format("Y-m-d");
-    
-    					$data = array("delivery_date"=>$ddate,"order_id"=>$odata->order_id,"user_id"=>$uid);
-    
-    					$this->db->insert("tbl_subscribed_deliveries",$data);
-    
-    				}
+				if($odata->subscription_days_count == "alternate"){
+
+					$begin = new DateTime( $odata->sub_start_date );
+					$end   = new DateTime( $odata->sub_end_date );
+
+					$id = 0;
+					for($i = $begin; $i <= $end; $i->modify('+2 day')){
+						
+						$ddate = $i->format("Y-m-d");
+						$data = array("delivery_date"=>$ddate,"order_id"=>$odata->order_id,"user_id"=>$uid);
+						$this->db->insert("tbl_subscribed_deliveries",$data);
+
+					}
+
+				}else{
+
+					$begin = new DateTime( $odata->sub_start_date );
+					$end   = new DateTime( $odata->sub_end_date );
+					
+					for($i = $begin; $i <= $end; $i->modify('+1 day')){
+						
+						$ddate = $i->format("Y-m-d");
+						$data = array("delivery_date"=>$ddate,"order_id"=>$odata->order_id,"user_id"=>$uid);
+						$this->db->insert("tbl_subscribed_deliveries",$data);
+
+					}
+				}
     
     		 }
     		

@@ -29,6 +29,8 @@ public function pauseSubscribtion(){
 	$oid = $this->input->post("oid");
 	$id = $this->input->post("id");
 	$status = $this->input->post("status",true);
+
+	$odata = $this->db->get_where("orders",array("order_id"=>$oid))->row();
 	
 	$data=array('pause_status'=>$status);
 		
@@ -44,7 +46,12 @@ public function pauseSubscribtion(){
 				
 				$edate = end($ords)->delivery_date;
 				$edate = strtotime($edate);
-				$date = strtotime("+1 day", $edate);
+					
+				if($odata->subscription_days_count == "alternate"){
+					$date = strtotime("+2 days", $edate);
+				}else{
+					$date = strtotime("+1 day", $edate);
+				}
 				
 				$endDate = date('Y-m-d', $date);
 
@@ -84,7 +91,11 @@ public function pauseSubscribtion(){
 					
 					$edate = end($uorders->row()->delivery_date);
 					$edate = strtotime($edate);
-					$date = strtotime("+1 day", $edate);
+					if($odata->subscription_days_count == "alternate"){
+						$date = strtotime("+2 days", $edate);
+					}else{
+						$date = strtotime("+1 day", $edate);
+					}
 
 					$endDate = date('Y-m-d', $date);
 
