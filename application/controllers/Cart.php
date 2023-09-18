@@ -126,7 +126,6 @@ class Cart extends CI_Controller
 		redirect(base_url() . 'cart');
 	}
 
-
 	public function insertOrder()
 	{
 
@@ -148,7 +147,6 @@ class Cart extends CI_Controller
 
 		$delShift = $this->input->post("delshift");
 		$subShift = $this->input->post("subshift");
-
 
 		$udata = $this->db->get_where("shreeja_users", array("userid" => $uid, "user_status" => 0))->row();
 
@@ -353,6 +351,14 @@ class Cart extends CI_Controller
 				$gst = isset($ngst) ? $ngst : 0;
 
 				$offerData = json_decode($subscription_offer_data);
+
+				$off = [];
+				foreach($offerData as $of){
+					if($of->cartid == $cc["rowid"]){
+						$off = $of;
+					}
+				}
+
 				
 				$cidata = array(
 
@@ -367,15 +373,18 @@ class Cart extends CI_Controller
 					"orderRef" => $cc["ref"]
 				);
 				
-				if($offerData->cartid == $cc["rowid"]){
+				if($off->cartid == $cc["rowid"]){
 					$cidata["orderRef"] = "subscription";
-					$cidata["subscription_offer"] =json_encode($this->db->get_where("tbl_subscription_offers",["id"=>$offerData->offer_id])->row());
+					$cidata["subscription_offer"] =json_encode($this->db->get_where("tbl_subscription_offers",["id"=>$off->offer_id])->row());
 				}else{
 					$cidata["orderRef"] = $cc["ref"];
 				}
 
 				$op = $this->db->insert("order_products", $cidata);
 			}
+
+			// $this->user_model->order_status($oid, "Success", "ZP58c0ab371dbc7", "ZP58c0ab371dac7");
+			// exit;
 
 			if ($op) {
 
@@ -718,7 +727,7 @@ class Cart extends CI_Controller
 
 								if ($c["product_id"] == $pid || $c["ref"] == "offer") {
 
-									exit();
+									// exit();
 								}
 							}
 
@@ -734,9 +743,9 @@ class Cart extends CI_Controller
 							);
 
 							$ci = $this->cart->insert($data);
-							echo json_encode(["status"=>"success"]);
+							// echo json_encode(["status"=>"success"]);
 
-							exit();
+							// exit();
 						} else {
 
 							$data = array();
@@ -760,7 +769,7 @@ class Cart extends CI_Controller
 							$d = $this->cart->update($data);
 
 							if ($d) {
-								echo json_encode(["status"=>"fail"]);
+								// echo json_encode(["status"=>"fail"]);
 							}
 						}
 					}
@@ -808,8 +817,8 @@ class Cart extends CI_Controller
 
 								$ci = $this->cart->insert($data);
 
-								echo json_encode(["status"=>"success"]);
-								exit();
+								// echo json_encode(["status"=>"success"]);
+								// exit();
 							} else {
 
 								$data = array();
@@ -833,7 +842,7 @@ class Cart extends CI_Controller
 								$d = $this->cart->update($data);
 
 								if ($d) {
-									echo json_encode(["status"=>"fail"]);
+									// echo json_encode(["status"=>"fail"]);
 								}
 							}
 						}
@@ -902,7 +911,7 @@ class Cart extends CI_Controller
 						);
 
 						$ci = $this->cart->insert($data);
-						echo json_encode(["status"=>"success"]);
+						// echo json_encode(["status"=>"success"]);
 					}
 				}
 			}
@@ -974,7 +983,7 @@ class Cart extends CI_Controller
 						);
 
 						$ci = $this->cart->insert($data);
-						echo json_encode(["status"=>"success"]);
+						// echo json_encode(["status"=>"success"]);
 					}
 				}
 			}
@@ -984,6 +993,7 @@ class Cart extends CI_Controller
 
 			$cContents = $this->cart->contents();
 			$subProducts  = $subscriptionOffer->result_array();
+			$sDiscount = 0;
 
 			foreach ($subProducts as $row) {
 
@@ -1017,10 +1027,16 @@ class Cart extends CI_Controller
 				if ($sStatus) {
 
 					if ((strtotime($date) >= strtotime($row["from_date"])) && (strtotime($date) <= strtotime($row["to_date"]))) {
-						echo json_encode(["status"=>"success", "discount"=>$disAmount, "total"=>$totAmount, "offer_id"=>$row["id"],"ref"=>"subscription", "cartid"=> $cartid]);
+						$sDiscount += $disAmount;
 					}
 				}
 			}
+
+			$totAmount = (($this->cart->total() * $row['subscriptionType']) - $sDiscount);
+			echo json_encode(["status"=>"success", "discount"=>$sDiscount, "total"=>$totAmount,"ref"=>"subscription"]);
+
+		}else{
+			echo json_encode(["status"=>"fail"]);
 		}
 
 	}
@@ -1035,6 +1051,8 @@ class Cart extends CI_Controller
 
 		$subscriptionOffer = $this->db->query("SELECT * FROM tbl_subscription_offers WHERE subscriptionType='$subscription_days_count' and status='Active' and city='$udata->user_location'");
 
+		$soffers = [];
+		
 		if ($subscriptionOffer->num_rows() > 0) {
 
 			$cContents = $this->cart->contents();
@@ -1072,11 +1090,13 @@ class Cart extends CI_Controller
 				if ($sStatus) {
 
 					if ((strtotime($date) >= strtotime($row["from_date"])) && (strtotime($date) <= strtotime($row["to_date"]))) {
-						return json_encode(["status"=>"success", "discount"=>$disAmount, "total"=>$totAmount, "offer_id"=>$row["id"],"ref"=>"subscription", "cartid"=> $cartid]);
+						$soffers[] = ["status"=>"success", "discount"=>$disAmount, "total"=>$totAmount, "offer_id"=>$row["id"],"ref"=>"subscription", "cartid"=> $cartid];
 					}
 				}
 			}
+			
 		}
+		return json_encode($soffers);
 	}
 
 

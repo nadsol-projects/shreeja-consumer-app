@@ -172,7 +172,7 @@ $zopid = array();
 $fopid = array();	
 $topid = array();	
 $eopid = array();	
-	
+$disDesc = array();	
 	
 $opdata = $this->db->get_where("order_products",array("order_id"=>$oid))->result(); 
 	
@@ -208,7 +208,10 @@ $opdata = $this->db->get_where("order_products",array("order_id"=>$oid))->result
 		  $eqty[] = $op->qty;
 		  $eopid[] = $op->order_product_id;
 	  }
-	  
+	  if($op->orderRef == "subscription"){
+		$offerData = json_decode($op->subscription_offer);
+		$disDesc[] = $offerData->description;
+	  }
 
 //	  $zero[] = $this->db->get_where("order_products",array('gst'=>0))->row()->product_id;
 //	  $five[] = $this->db->get_where("order_products",array("order_id"=>$oid,'gst'=>5))->row()->product_id;
@@ -263,7 +266,7 @@ foreach($eighteen as $key => $t){
 	
 }
 	
-$data = json_encode(array("zero"=>array_sum($zvalue),"five"=>array_sum($fvalue),"tfive"=>array_sum($tfvalue),"twelve"=>array_sum($tvalue),"ttwelve"=>array_sum($ttvalue),"eighteen"=>array_sum($evalue),"teighteen"=>array_sum($tevalue),"qty"=>array_sum($quantity)));
+$data = json_encode(array("zero"=>array_sum($zvalue),"five"=>array_sum($fvalue),"tfive"=>array_sum($tfvalue),"twelve"=>array_sum($tvalue),"ttwelve"=>array_sum($ttvalue),"eighteen"=>array_sum($evalue),"teighteen"=>array_sum($tevalue),"qty"=>array_sum($quantity), "disDesc"=> $disDesc));
 
 return $data; 
 	

@@ -428,8 +428,17 @@ $html .=			'<tr>
 							<td style="font-weight: bold;">'.$totalAmount.'</td>
 					</tr>
 
-				</table>
-				<div class="total"><li>Total Invoice value: '.$totalWords.' </li></div>
+				</table>';
+
+$discountDescription = $iData->disDesc;				
+if(count($discountDescription) > 0){
+	$html .= '<div class="total" style="margin-top: 10px"><p><b>Discount:</b> </p><ul style="margin-left: 20px;">';
+		foreach($discountDescription as $dd){
+			$html .= '<li>'.$dd.'</li>';
+		}
+	$html .= '</ul></div>';
+}				
+$html .= '<div class="total"><li>Total Invoice value: '.$totalWords.' </li></div>
 
 				<div class="footer"><li>*Invoice is generated electronically hence does not require signature.</li></div>
 		</div>

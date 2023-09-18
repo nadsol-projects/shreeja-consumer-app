@@ -1358,7 +1358,7 @@ function checkOffer(){
 		},
 		error : function(data){
 			
-			console.log(data);
+			console.log("err",data);
 			$("#discount").hide();
 			$(".disAmount").html('&#8377;'+0);
 			$("#promoDisamount").val(0)

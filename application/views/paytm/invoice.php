@@ -3,7 +3,7 @@ error_reporting(E_ERROR | E_PARSE);
 ob_clean();
 
 require_once(APPPATH.'libraries/mpdf/mpdf.php');
-//date_default_timezone_set('Asia/Kolkata');
+date_default_timezone_set('Asia/Kolkata');
 
 if(json_decode($o->user_data)){
 											   
@@ -240,10 +240,7 @@ if($fsOrder == "false"){
 	  
 	 
         $iData = json_decode($this->products_model->getinvoiceData($o->order_id));
-        
         $orderType = ($o->order_type == "subscribe") ? 30 : 1;
-        
-        
         
         $tgst = $iData->twelve/2 * $orderType;
         $egst = $iData->eighteen/2 * $orderType;
@@ -433,8 +430,17 @@ $html .=			'<tr>
 							<td style="font-weight: bold;">'.$totalAmount.'</td>
 					</tr>
 
-				</table>
-				<div class="total"><li>Total Invoice value: '.$totalWords.' </li></div>
+				</table>';
+
+$discountDescription = $iData->disDesc;				
+if(count($discountDescription) > 0){
+	$html .= '<div class="total" style="margin-top: 10px"><p><b>Discount:</b> </p><ul style="margin-left: 20px;">';
+		foreach($discountDescription as $dd){
+			$html .= '<li>'.$dd.'</li>';
+		}
+	$html .= '</ul></div>';
+}				
+$html .= '<div class="total"><li>Total Invoice value: '.$totalWords.' </li></div>
 
 				<div class="footer"><li>*Invoice is generated electronically hence does not require signature.</li></div>
 		</div>
@@ -442,9 +448,9 @@ $html .=			'<tr>
 </html>';
 
 
-//echo $html;
+// echo $html;
 	$mpdf->WriteHTML($html);
 	$mpdf->Output($o->order_id.".pdf","I");
 
-	$mpdf->Output("","I");
+	// $mpdf->Output("","I");
 ?>
