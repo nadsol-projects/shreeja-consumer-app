@@ -79,6 +79,91 @@ function get_domain($url)
   return false;
 }	
 	
+function deleteUser()
+{
+	$this->load->view("deleteUser");
+}	
+
+public function checkDeluser(){
+	
+	
+	$mobile = $this->input->post("mobile");
+	
+	$mchk = $this->db->get_where("shreeja_users",array("user_mobile"=>$mobile,"user_status"=>0,"steps_completed"=>4))->num_rows();
+	
+	if($mchk == 1){
+
+		$string = '0123456789';
+		$string_shuffled = str_shuffle($string);
+		$otp = substr($string_shuffled, 1, 4);
+		
+		$otpChk = $this->db->get_where("fdm_va_otp",array("mobile_number"=>$mobile))->num_rows();
+		
+		if($otpChk == 1){
+			
+			$data = array("otp"=>$otp);
+			$this->db->set($data);
+			$this->db->where("mobile_number",$mobile);
+			$mi = $this->db->update("fdm_va_otp");
+
+		}else{
+
+			$data = array("mobile_number"=>$mobile,"otp"=>$otp);
+			$mi = $this->db->insert("fdm_va_otp",$data);
+			
+		}
+		if($mi){
+
+			// $this->session->set_userdata(array("mobile_number"=>$mobile));
+			$msg = "$otp (OTP number) is your Shreeja Milk OTP. OTP is confidential for security reasons do not share with any one.";
+			$this->sms->send_sms($mobile,$msg);
+
+			$msg = '<div class="alert alert-success" align="center" style="margin: 20px">Please Enter OTP to delete your account permanently.</div>';
+			echo json_encode(["status"=>true, "msg"=>$msg]);
+			exit;	
+		}else{
+			$msg = '<div class="alert alert-danger" align="center" style="margin: 20px">Error Occured.</div>';
+			echo json_encode(["status"=>false, "msg"=>$msg]);
+			exit;
+		}
+		
+	}else{
+		
+		$msg = '<div class="alert alert-danger" align="center" style="margin: 20px">You are not registered with us. Please sign up with us.</div>';
+		echo json_encode(["status"=>false, "msg"=>$msg]);
+		exit;
+		
+	}
+	
+}
+
+public function checkDelotp(){
+	
+	$mobile = $this->input->post("mobile_number");
+	$otp = $this->input->post("otp", true);
+	
+	$otpChk = $this->db->get_where("fdm_va_otp",array("otp"=>$otp,"mobile_number"=>$mobile))->num_rows();
+	if($otpChk == 1){
+		
+		$this->db->get_where("shreeja_users",array("user_mobile"=>$mobile,"user_status"=>0,"steps_completed"=>4))->num_rows();
+
+		$this->db->set(["user_status"=>1]);
+		$this->db->where(array("user_mobile"=>$mobile,"user_status"=>0,"steps_completed"=>4));
+		$mi = $this->db->update("shreeja_users");
+		
+		$this->db->delete("fdm_va_otp",array("mobile_number"=>$mobile));
+		$msg = '<div class="alert alert-success" align="center" style="margin: 20px">Account Deleted Successfully.</div>';
+		echo json_encode(["status"=>true, "msg"=>$msg]);
+		exit;
+		
+	}else{
+		$msg = '<div class="alert alert-danger" align="center" style="margin: 20px">Invalid OTP.</div>';
+		echo json_encode(["status"=>false, "msg"=>$msg]);
+		exit;
+	}
+	
+}
+	
 public function register(){
 	
 	$this->load->view("registration");
@@ -131,7 +216,7 @@ public function sendOtp(){
 	
 	if($mobile != ""){
 
-		$mchk = $this->db->get_where("shreeja_users",array("user_mobile"=>$mobile));
+		$mchk = $this->db->get_where("shreeja_users",array("user_mobile"=>$mobile, "user_status"=>0));
 
 //		if($mchk->num_rows() == 1){
 //					
@@ -164,7 +249,7 @@ public function sendOtp(){
 				if($mchk->num_rows() == 0){
 					$this->db->insert("shreeja_users",array("steps_completed"=>2,"user_mobile"=>$mobile));
 				}
-				$udata = $this->db->get_where("shreeja_users",array("user_mobile"=>$mobile))->row();
+				$udata = $this->db->get_where("shreeja_users",array("user_mobile"=>$mobile, "user_status"=>0))->row();
 
 				$this->session->set_userdata(array("mobile_number"=>$mobile,"steps_completed"=>$udata->steps_completed));
 
