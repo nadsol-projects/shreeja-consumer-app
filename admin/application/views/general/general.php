@@ -976,10 +976,23 @@ $wdata = json_decode($this->admin->get_option("welcome_note"));
                                                <label>Order Type: </label>
                                                <div class="form-group">
                                                	
-                                               	<select class="form-control" name="orderType" required>
+                                               	<select class="form-control oType" name="orderType" id="oType" required>
                                                		<option value="">Select Order Type</option>
                                                		<option value="deliveryonce">Delivery Once</option>
                                                		<option value="subscribe">Subscription</option>
+														
+                                               	</select>
+                                               	
+                                               </div> 
+                                               
+                                               <div class="form-group sType" style="display: none;">
+                                                <label>Subscription Type: </label>
+                                               	
+                                               	<select class="form-control" name="subscriptionType">
+                                               		<option value="30">Monthly</option>
+                                               		<option value="15">15 Days</option>
+                                               		<option value="7">Weekly</option>
+                                               		<option value="alternate">Alternate</option>
 														
                                                	</select>
                                                	
@@ -1029,6 +1042,7 @@ $wdata = json_decode($this->admin->get_option("welcome_note"));
                                                 <th>City</th>
                                                 <th>Charge Type</th>
                                                 <th>Order Type</th>
+                                                <th>Subscription Type</th>
                                                 <th>Deliver charges</th>
                                                 <th>Cutoff charges</th>
                                                 <th>Minimum charges</th>
@@ -1047,6 +1061,7 @@ $wdata = json_decode($this->admin->get_option("welcome_note"));
                                                 <td style="padding: 0.5rem;"><?php echo $this->db->get_where("tbl_locations",array("id"=>$u->city_id))->row()->location ?></td>
                                                 <td style="padding: 0.5rem;"><?php echo $u->chargeType ?></td>
                                                 <td style="padding: 0.5rem;"><?php echo $u->deliveryType ?></td>
+                                                <td style="padding: 0.5rem;"><?php echo $u->subscriptionType !== "" ? $u->subscriptionType." Days" : '' ?></td>
                                                 <td style="padding: 0.5rem;"><i class="fa fa-rupee"></i> <?php echo $u->deliveryCharges ?></td>
                                                 <td style="padding: 0.5rem;"><i class="fa fa-rupee"></i> <?php echo $u->cutoffCharges ?></td>
                                                 <td style="padding: 0.5rem;"><i class="fa fa-rupee"></i> <?php echo $u->minimumCharges ?></td>
@@ -1120,7 +1135,7 @@ $wdata = json_decode($this->admin->get_option("welcome_note"));
 					   <label>Order Type: </label>
 					   <div class="form-group">
 
-						<select class="form-control" name="orderType" required>
+						<select class="form-control oType" name="orderType" required>
 							<option value="">Select Order Type</option>
 							<option value="deliveryonce" <? echo ($u->deliveryType == 'deliveryonce') ? 'selected' : '' ?>>Delivery Once</option>
 							<option value="subscribe" <? echo ($u->deliveryType == 'subscribe') ? 'selected' : '' ?>>Subscription</option>
@@ -1128,6 +1143,19 @@ $wdata = json_decode($this->admin->get_option("welcome_note"));
 						</select>
 
 					   </div> 
+
+                       <div class="form-group sType" style="display: <? echo ($u->deliveryType == 'subscribe') ? 'block' : 'none' ?>;">
+                        <label>Subscription Type: </label>
+                        
+                        <select class="form-control" name="subscriptionType">
+                            <option value="30" <? echo ($u->subscriptionType == '30') ? 'selected' : '' ?>>Monthly</option>
+                            <option value="15" <? echo ($u->subscriptionType == '15') ? 'selected' : '' ?>>15 Days</option>
+                            <option value="7" <? echo ($u->subscriptionType == '7') ? 'selected' : '' ?>>Weekly</option>
+                            <option value="alternate" <? echo ($u->subscriptionType == 'alternate') ? 'selected' : '' ?>>Alternate</option>
+                                
+                        </select>
+                        
+                        </div>
 
 
 						<label>Delivery Charges:</label>
@@ -1238,6 +1266,16 @@ $wdata = json_decode($this->admin->get_option("welcome_note"));
 
 <script>
 	
+$(".oType").change(function(){
+    
+    var val = $(this).val();
+    if(val == "subscribe"){
+        $(".sType").show();
+    }else{
+        $(".sType").hide();
+    }
+    
+})    
 
 $(".check").bootstrapSwitch({size : 'small'});
 $(".dvcheck").bootstrapSwitch({size : 'small'});

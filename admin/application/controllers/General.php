@@ -778,6 +778,7 @@ public function insertCharges(){
 	$mCharges = $this->input->post("minCharges",true);
 	$chargeType = $this->input->post("chargeType",true);
 	$orderType = $this->input->post("orderType",true);
+	$subscriptionType = $this->input->post("subscriptionType",true);
 
 	if($chargeType == "deliveryCharges"){
 		
@@ -793,7 +794,7 @@ public function insertCharges(){
 		
 	}
 	
-	$cChk = $this->db->get_where("tbl_charges",array("deliveryType"=>$orderType,"city_id"=>$loc_name))->num_rows();
+	$cChk = $this->db->get_where("tbl_charges",array("deliveryType"=>$orderType,"city_id"=>$loc_name, "subscriptionType"=>$subscriptionType))->num_rows();
 	
 	if($cChk == 1){
 		
@@ -810,7 +811,8 @@ public function insertCharges(){
 		"deliveryType" => $orderType,
 		"deliveryCharges" => $delCharges,
 		"cutoffCharges" => $coffCharges,
-		"minimumCharges" => $minCharges
+		"minimumCharges" => $minCharges,
+		"subscriptionType" => $subscriptionType
  
  	);	
 
@@ -835,6 +837,7 @@ public function updateCharges(){
 	$mCharges = $this->input->post("minCharges",true);
 	$chargeType = $this->input->post("chargeType",true);
 	$orderType = $this->input->post("orderType",true);
+	$subscriptionType = $this->input->post("subscriptionType",true);
 
 	if($chargeType == "deliveryCharges"){
 		
@@ -850,7 +853,7 @@ public function updateCharges(){
 		
 	}
 	
-	$cChk = $this->db->get_where("tbl_charges",array("deliveryType"=>$orderType,"city_id"=>$loc_name,"id !="=>$id))->num_rows();
+	$cChk = $this->db->get_where("tbl_charges",array("deliveryType"=>$orderType,"city_id"=>$loc_name, "subscriptionType"=>$subscriptionType,"id !="=>$id))->num_rows();
 	
 	if($cChk == 1){
 		
@@ -866,7 +869,8 @@ public function updateCharges(){
 		"deliveryType" => $orderType,
 		"deliveryCharges" => $delCharges,
 		"cutoffCharges" => $coffCharges,
-		"minimumCharges" => $minCharges
+		"minimumCharges" => $minCharges,
+		"subscriptionType" => $subscriptionType
  
  	);	
 

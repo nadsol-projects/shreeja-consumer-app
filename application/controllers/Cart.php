@@ -277,7 +277,9 @@ class Cart extends CI_Controller
 		$total_amount = $this->input->post("total_amount");
 		$total_order_amount = $total_amount + $gst_charges + $deliveryCharges + $pdisamount;
 
-
+		if($order_type == "subscribe"){
+			$this->db->where("subscriptionType", $subscription_days_count);
+		}
 		$minAmt = $this->db->get_where("tbl_charges", array("chargeType" => "minOrder", "status" => "Active", "deliveryType" => $order_type))->row();
 
 		$this->db->where("sdate <='" . date("Y-m-d", strtotime($deliveryonce_date)) . "'");
