@@ -31,6 +31,7 @@ public function pauseSubscribtion(){
 	$status = $this->input->post("status",true);
 
 	$odata = $this->db->get_where("orders",array("order_id"=>$oid))->row();
+	$subscription_days_count = $odata->subscription_days_count == "alternate" ? 30 : $odata->subscription_days_count;
 	
 	$data=array('pause_status'=>$status);
 		
@@ -75,17 +76,17 @@ public function pauseSubscribtion(){
 			
 		$uorders = $this->db->order_by("id","desc")->get_where("tbl_subscribed_deliveries",array("order_id"=>$oid,"user_id"=>$uid,"pause_status"=>"Inactive"));
 			
-		if($uorders->num_rows() != 30){
+		if($uorders->num_rows() != $subscription_days_count){
 			
-			if($uorders->num_rows() > 30){
+			if($uorders->num_rows() > $subscription_days_count){
 				
-				$count = ($uorders->num_rows() - 30);
+				$count = ($uorders->num_rows() - $subscription_days_count);
 				
 				$this->db->order_by("id","desc")->limit($count)->delete("tbl_subscribed_deliveries",array("order_id"=>$oid,"user_id"=>$uid,"pause_status"=>"Inactive"));
 				
 			}else{
 				
-				$count = (30 - $uorders->num_rows());
+				$count = ($subscription_days_count - $uorders->num_rows());
 				
 				for($i=1; $i<=$count; $i++){
 					

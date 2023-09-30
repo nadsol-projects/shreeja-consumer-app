@@ -280,7 +280,7 @@ class Cart extends CI_Controller
 		if($order_type == "subscribe"){
 			$this->db->where("subscriptionType", $subscription_days_count);
 		}
-		$minAmt = $this->db->get_where("tbl_charges", array("chargeType" => "minOrder", "status" => "Active", "deliveryType" => $order_type))->row();
+		$minAmt = $this->db->get_where("tbl_charges", array("chargeType" => "minOrder", "status" => "Active", "deliveryType" => $order_type, "city_id"=>$location))->row();
 
 		$this->db->where("sdate <='" . date("Y-m-d", strtotime($deliveryonce_date)) . "'");
 		$this->db->where("edate >='" . date("Y-m-d", strtotime($deliveryonce_date)) . "'");

@@ -1093,7 +1093,7 @@ $( function() {
 	  $.ajax({
 	  
 	  	type : "post",
-	  	data : {qty : qty, measurement : meas},
+	  	data : {qty : qty, measurement : meas, daysCount: sVal},
 	  	url : "<?php echo base_url("ajax/getsubQuantity") ?>",
 		dataType : "json",								  
 	  	success : function(data){

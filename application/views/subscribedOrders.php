@@ -21,7 +21,6 @@ $o = $this->db->get_where("orders",array("order_id"=>$this->uri->segment(3)))->r
                                         <thead>
                                             <tr>
                                                 <th>S.No</th>
-                                                <th>S.No</th>
                                                 <th>Order Id</th>
                                                 <th>Delivery Date</th>
                                                 <th>Pause Order</th>
@@ -113,7 +112,6 @@ $o = $this->db->get_where("orders",array("order_id"=>$this->uri->segment(3)))->r
 
                                             <tr>
                                                 <td style="padding: 0.5rem;"><?php echo ++$i ?></td>
-                                                <td><? echo $u->pause_status ?></td>
                                                 <td style="padding: 0.5rem;"><?php echo $u->order_id ?></td>
                                                 <td style="padding: 0.5rem;"><?php echo date("d-M-Y",strtotime($u->delivery_date)); ?></td>
                                                 <td style="padding: 0.5rem;">

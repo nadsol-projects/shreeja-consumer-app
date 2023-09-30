@@ -950,7 +950,7 @@ $wdata = json_decode($this->admin->get_option("welcome_note"));
                                                		<option value="">Select City</option>
                                                		
                                                		<?php
-														$locations = $this->db->get_where("tbl_locations",array("deleted"=>0))->result();
+														$locations = $this->db->get_where("tbl_locations",array("deleted"=>0, "assign_to"=>"consumers"))->result();
 											 
 											 			foreach($locations as $ll){
 													?>			
@@ -1109,7 +1109,7 @@ $wdata = json_decode($this->admin->get_option("welcome_note"));
 							<option value="">Select City</option>
 
 							<?php
-								$locations = $this->db->get_where("tbl_locations",array("deleted"=>0))->result();
+								$locations = $this->db->get_where("tbl_locations",array("deleted"=>0, "assign_to"=>"consumers"))->result();
 
 								foreach($locations as $ll){
 							?>			

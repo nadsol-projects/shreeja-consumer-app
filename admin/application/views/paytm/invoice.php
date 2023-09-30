@@ -220,6 +220,7 @@ td, th {
 
 
 $fsOrder = ($o->order_type == "freesample") ? "true" : "false";
+$subscription_days_count = $o->subscription_days_count == "alternate" ? 30 : $o->subscription_days_count;
 
 if($fsOrder == "false"){
 	
@@ -228,18 +229,18 @@ if($fsOrder == "false"){
 	  $pdata = $this->db->get_where("tbl_products",array("id"=>$op->product_id))->row();
 	  
 	  $gst = $op->gst/2 ;
-	  $gst1 = ($o->order_type == "subscribe") ? $op->gst*30 : $op->gst;	  
+	  $gst1 = ($o->order_type == "subscribe") ? $op->gst*$subscription_days_count : $op->gst;	  
 		  
 		  
-	  $orderTypeamt = ($o->order_type == "subscribe") ? $op->qty * 30 : $op->qty;
+	  $orderTypeamt = ($o->order_type == "subscribe") ? $op->qty * $subscription_days_count : $op->qty;
 	  
-	  $totalPrice = ($o->order_type == "subscribe") ? $op->qty*30 : $op->qty;
-	  $stotalPrice = ($o->order_type == "subscribe") ? $op->price*$op->qty*30 : $op->price*$op->qty;
+	  $totalPrice = ($o->order_type == "subscribe") ? $op->qty*$subscription_days_count : $op->qty;
+	  $stotalPrice = ($o->order_type == "subscribe") ? $op->price*$op->qty*$subscription_days_count : $op->price*$op->qty;
 	  
 	 
         $iData = json_decode($this->products_model->getinvoiceData($o->order_id));
         
-        $orderType = ($o->order_type == "subscribe") ? 30 : 1;
+        $orderType = ($o->order_type == "subscribe") ? $subscription_days_count : 1;
         
         
         

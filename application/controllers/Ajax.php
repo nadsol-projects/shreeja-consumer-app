@@ -105,14 +105,15 @@ public function getsubQuantity(){
 	
 	$qty = $this->input->post("qty");
 	$meas = $this->input->post("measurement");
+	$daysCount = $this->input->post("daysCount");
 	
 	$data = array();
 
 	foreach($qty as $key => $value){
 		
-		$int = number_format($value*30);
+		$int = number_format($value*$daysCount);
 		
-		$chkVal = $value*30;
+		$chkVal = $value*$daysCount;
 		
 		
 		if($chkVal >= 1000){
