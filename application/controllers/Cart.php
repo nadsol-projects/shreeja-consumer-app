@@ -273,10 +273,12 @@ class Cart extends CI_Controller
 
 		$pStatus = ($promoStatus == "Active") ? $promoStatus : "Inactive";
 		$pdisamount = ($promoDisamount != "") ? $promoDisamount : 0;
+		$dCharges = ($deliveryCharges == "Free") ? 0 : $deliveryCharges;
 
 		$total_amount = $this->input->post("total_amount");
-		$total_order_amount = $total_amount + $gst_charges + $deliveryCharges + $pdisamount;
-
+		$total_order_amount = $total_amount + $gst_charges + $dCharges + $pdisamount;
+		$mintotal_order_amount = $total_amount + $gst_charges + $dCharges;
+		
 		if($order_type == "subscribe"){
 			$this->db->where("subscriptionType", $subscription_days_count);
 		}
@@ -288,7 +290,7 @@ class Cart extends CI_Controller
 
 		if ($minAmt) {
 
-			if ($total_order_amount < $minAmt->minimumCharges && $subChk == 0) {
+			if ($mintotal_order_amount < $minAmt->minimumCharges && $subChk == 0) {
 
 				$msg = '<div class="alert alert-danger">Cart value should be greater than &#8377; ' . $minAmt->minimumCharges . '.</div>';
 
