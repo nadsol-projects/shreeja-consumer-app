@@ -751,7 +751,7 @@ $("#promoCode").click(function(){
 						$(".totalPrice1").html('&#8377;'+total);
 	  					$("#totalAmount").val(total);
 						
-						checkOffer();	
+						// checkOffer();	
 
 
 					},
