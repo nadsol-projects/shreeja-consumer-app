@@ -15,8 +15,8 @@
 //	$access_code='AVMJ02FL43BM51JMMB';//Shared by CCAVENUES
 	
 // live credentials	
-	$working_key= '3827A52CEA61B0DDC2C73E46C5EC1C20';//Shared by CCAVENUES
-	$access_code= 'AVBI09IE19BN38IBNB';//Shared by CCAVENUES
+	$working_key= '9EDFB872C0112FA119CE0BCF6EEADD05';//Shared by CCAVENUES
+	$access_code= 'AVYV92KG93CE78VYEC';//Shared by CCAVENUES
 	
 	foreach ($_POST as $key => $value){
 		$merchant_data.=$key.'='.$value.'&';

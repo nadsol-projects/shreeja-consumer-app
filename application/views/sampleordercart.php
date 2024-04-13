@@ -273,6 +273,7 @@ $(document).ready(function(){
 		minDate: <? echo $date ?>,
 		dateFormat: "dd-mm-yy",
 	    changeMonth: true,
+	    changeYear: true,
 	  });
 	});
 	

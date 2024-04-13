@@ -658,7 +658,9 @@ class Cart extends CI_Controller
 		$total = $this->input->post("total");
 		$date = date("m/d/Y", strtotime("now"));
 		$orderType = $this->input->post("orderType");
-		$subscription_days_count = $this->input->post("subscription_days_count");
+		$subscription_days = $this->input->post("subscription_days_count");
+		
+		$subscription_days_count = ($subscription_days == 'alternate') ? 30 : $subscription_days;
 
 		$chkOffext = $this->db->get_where("orders", array("user_id" => $this->session->userdata("user_id"), "hasOffer" => "Active", "payment_status" => "Success"))->num_rows();
 
@@ -671,7 +673,7 @@ class Cart extends CI_Controller
 
 		$cOffer = $this->db->query("SELECT * FROM tbl_product_offers WHERE offerType='crossProduct' AND orderType='$orderType' and status='Active' and city='$udata->user_location'");
 
-		$subscriptionOffer = $this->db->query("SELECT * FROM tbl_subscription_offers WHERE subscriptionType='$subscription_days_count' and status='Active' and city='$udata->user_location'");
+		$subscriptionOffer = $this->db->query("SELECT * FROM tbl_subscription_offers WHERE subscriptionType='$subscription_days' and status='Active' and city='$udata->user_location'");
 
 		if ($query->num_rows() > 0 && $subscription_days_count == 30) {
 
@@ -1013,15 +1015,17 @@ class Cart extends CI_Controller
 				foreach ($cContents as $c) {
 
 					if ($c["product_id"] == $pid) {
+					    
+					    $subType = ($row['subscriptionType'] == 'alternate') ? 30 : $row['subscriptionType'];
 
 						$sStatus = true;
 						if($row['offerType'] == "rs"){
-							$disAmount = ($row['inputQty'] * $row['subscriptionType']);
-							$totAmount = (($this->cart->total() * $row['subscriptionType']) - $disAmount);
+							$disAmount = ($row['inputQty'] * $subType) * $c['qty'];
+							$totAmount = (($this->cart->total() * $subType) - $disAmount);
 							$cartid = $c["rowid"];
 						}else if($row['offerType'] == "days"){
-							$disAmount = ($row['inputQty'] * $c['price']);
-							$totAmount = (($this->cart->total() * $row['subscriptionType']) - $disAmount);
+							$disAmount = (($row['inputQty'] * $c['price']) * $c['qty']);
+							$totAmount = (($this->cart->total() * $subType) - $disAmount);
 							$cartid = $c["rowid"];
 						}
 						
@@ -1035,8 +1039,10 @@ class Cart extends CI_Controller
 					}
 				}
 			}
+			
+			$sDiscount = round($sDiscount, 2);
 
-			$totAmount = (($this->cart->total() * $row['subscriptionType']) - $sDiscount);
+			$totAmount = (($this->cart->total() * $subType) - $sDiscount);
 			echo json_encode(["status"=>"success", "discount"=>$sDiscount, "total"=>$totAmount,"ref"=>"subscription"]);
 
 		}else{

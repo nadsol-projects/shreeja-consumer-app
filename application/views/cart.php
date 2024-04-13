@@ -195,17 +195,17 @@
 								</label>
 								<hr />
 								<div class="pl-2 displaysubscriptionType">
-									<label class="radio-inline">
-									<input type="radio" name="subscription_days_count" class="subscriptionType" value="30" checked>&nbsp; Monthly
+								    <label class="radio-inline">
+									<input type="radio" name="subscription_days_count" class="subscriptionType" value="7">&nbsp; Weekly (7 Days)
 									</label>
 									<label class="radio-inline">
 									<input type="radio" name="subscription_days_count" class="subscriptionType" value="15">&nbsp; 15 Days
 									</label>
 									<label class="radio-inline">
-									<input type="radio" name="subscription_days_count" class="subscriptionType" value="7">&nbsp; Weekly
+									<input type="radio" name="subscription_days_count" class="subscriptionType" value="30" checked>&nbsp; Monthly (30 Days)
 									</label>
 									<label class="radio-inline">
-									<input type="radio" name="subscription_days_count" class="subscriptionType" value="alternate">&nbsp; Alternate Days
+									<input type="radio" name="subscription_days_count" class="subscriptionType" value="alternate">&nbsp; Alternative (30 Days)
 									</label>
 								</div>
 								
@@ -564,7 +564,15 @@
 	$(".subscriptionType").change(function(){
 		$("#start-date").val("")
 		$("#end-date").val("")
+		$("#promo").val("")
+		$("#promoCode").removeAttr("disabled","disabled")
+		$("#promoCode").html("Apply")
 		checkOffer()
+	})
+	
+	$("#promo").change(function(){
+		$("#promoCode").removeAttr("disabled","disabled")
+		$("#promoCode").html("Apply")
 	})
 	
 $(document).ready(function(){
@@ -678,6 +686,8 @@ $("#promoCode").click(function(){
 		
 	}
 	
+	var discount = $("#promoDisamount").val();
+	
 	
 	$.ajax({
 		
@@ -700,6 +710,8 @@ $("#promoCode").click(function(){
 			}
 			
 			if(data.status == "success"){
+			    
+			    var totalDisc = parseFloat(discount) + parseFloat(data.disPrice);
 				
 				Swal(
 				  'Success!',
@@ -708,7 +720,7 @@ $("#promoCode").click(function(){
 				);
 				
 				$("#promoStatus").val("Active");
-				$("#promoDisamount").val(data.disPrice);
+				$("#promoDisamount").val(totalDisc);
 				
 				var gst = $("#gstAmt").val();
 				
@@ -728,7 +740,7 @@ $("#promoCode").click(function(){
 				
 				$("#discount").show();
 //	  			$(".disTotal").html('&#8377;'+disTTotal);
-				$(".disAmount").html('&#8377;'+data.disPrice);
+				$(".disAmount").html('&#8377;'+totalDisc);
 				
 				$("#promoCode").attr("disabled","disabled")
 				$("#promoCode").html("Applied")
@@ -1002,7 +1014,8 @@ $( function() {
   var dates = $("#start-date").datepicker({
 //    defaultDate: "+2d",
     changeMonth: true,
-//    numberOfMonths: 1,
+    changeYear: true,
+    // numberOfMonths: 12,
     minDate: <?php echo $date ?>,
     dateFormat: "dd-mm-yy",
     onSelect: function(selectedDate) {
@@ -1028,16 +1041,16 @@ $( function() {
          	$('#end-date').val(endDate);
 			var sVal = subCount == 'alternate' ? 30 : subCount;
 	  
-	  		var totalPrice = Math.round(parseFloat($("#totalCount").val()) * parseInt(sVal));
+	  		var totalPrice = parseFloat($("#totalCount").val()) * parseInt(sVal);
 	  
-	  		var totalGST = Math.round(parseFloat($("#gstCharges").val()) * parseInt(sVal));
+	  		var totalGST = parseFloat(parseFloat($("#gstCharges").val()) * parseInt(sVal)).toFixed(2);
 	  
 	  
 	  		var totalDelivery = <? echo isset($sdeliveryCharges) ? $sdeliveryCharges : 0 ?>;
 	  		var deliveryCutoff = <? echo isset($scutOffcharges) ? $scutOffcharges : 0 ?>;
 	  
-	  		var total = parseFloat(totalPrice) + parseFloat(totalGST);
-	  		var stotal = parseFloat(totalPrice);
+	  		var total = (parseFloat(parseFloat(totalPrice).toFixed(2)) + parseFloat(totalGST));
+	  		var stotal = parseFloat(totalPrice).toFixed(2);
 	  
 	  
 	  		if(total < deliveryCutoff){
@@ -1178,6 +1191,9 @@ $(document).ready(function(){
 	
 $("#deliveryonce").click(function(){
         
+    $("#promoCode").removeAttr("disabled","disabled")
+	$("#promoCode").html("Apply")    
+	
 	$(".displaysubscriptionType").hide();
 	$("#delshift").val("");
 	$("#subshift").val("");
@@ -1244,6 +1260,9 @@ $("#deliveryonce").click(function(){
 });
 	
 $("#subscritption").click(function(){
+    
+        $("#promoCode").removeAttr("disabled","disabled")
+		$("#promoCode").html("Apply")
 
 		$(".displaysubscriptionType").show();
   		$("#delshift").val("");
@@ -1271,7 +1290,11 @@ $("#delivery-date").datepicker({
     minDate: <?php echo $date ?>,
     dateFormat: "dd-mm-yy",
     changeMonth: true,
+    changeYear: true,
 	onSelect : function(){
+	    
+	    $("#promoCode").removeAttr("disabled","disabled")
+		$("#promoCode").html("Apply")
 	
 		$("#delshift").val("");
 		$("#subshift").val("");
@@ -1339,7 +1362,7 @@ function checkOffer(){
 			$("#discount").hide();
 				
 			$("#cartProducts").load("<? echo base_url('cart/cartProducts') ?>");
-			if(parseInt(data.discount) > 0){
+			if((data.discount) > 0){
 
 				var disTTotal = parseFloat(data.discount);
 				
@@ -1347,7 +1370,7 @@ function checkOffer(){
 				$(".disAmount").html('&#8377;'+data.discount);
 				$("#promoDisamount").val(data.discount)
 				
-				var gTotal = (parseFloat(data.total) + parseFloat(data.discount))
+				var gTotal = ((data.total) + (data.discount))
 
 	  			$(".totalPrice1").html('&#8377;'+data.total);
 	  			$(".totalPrice2").html('&#8377;'+gTotal);

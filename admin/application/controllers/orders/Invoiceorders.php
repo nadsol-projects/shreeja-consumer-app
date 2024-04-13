@@ -25,29 +25,46 @@ public function __construct(){
 		$data["o"] = $this->db->get_where("orders",array("order_id"=>$oid,"payment_status"=>"Success"))->row();
 		$this->load->view('orders/invoice',$data);		
 		
-	}	
+	}
 	
-	public function getOrders($sdate,$edate){
+	public function processingOrders(){
+		
+		$this->load->view('orders/admin/invoiceOrders');		
+		
+	}
+	
+	public function getOrders($sdate,$edate, $ref){
 	
 		// delivery once orders
 		
 		$this->db->select('order_id,user_id,shipping_address,delivery_status,order_type,order_status,date_of_order,user_data,deliveryShift,assigned_to,sub_start_date,sub_end_date,id,total_amount,deliveryonce_date as deliverydate');
 		$this->db->from('orders');
-		$this->db->where("payment_status","Success");
-		$this->db->where("order_type","deliveryonce");
-		$this->db->where('deliveryonce_date >=', date("d-m-Y",strtotime($sdate)));
-		$this->db->where('deliveryonce_date <=', date("d-m-Y",strtotime($edate)));
+		
+		if($ref == "processingOrders"){
+		    $this->db->where("order_status !=","Success");
+		}else{
+    		$this->db->where("payment_status","Success");
+		}
+    	$this->db->where("order_type","deliveryonce");
+		$this->db->order_by("id", "desc");
+// 		$this->db->where('DATE(date_of_order) >=', date("Y-m-d",strtotime($sdate)));
+// 		$this->db->where('DATE(date_of_order) <=', date("Y-m-d",strtotime($edate)));
 		
 		$dorders = $this->db->get()->result();
 	
 	// subscription orders
 		
-		$this->db->select('order_id,user_id,shipping_address,delivery_status,order_type,order_status,date_of_order,user_data,deliveryShift,assigned_to,sub_start_date,sub_end_date,id,total_amount,deliveryonce_date as deliverydate');
+		$this->db->select('order_id,user_id,shipping_address,delivery_status,order_type,order_status,date_of_order,user_data,deliveryShift,assigned_to,sub_start_date,sub_end_date,id,total_amount,deliveryonce_date as deliverydate, subscription_days_count');
 		$this->db->from('orders');
-		$this->db->where("payment_status","Success");
+		if($ref == "processingOrders"){
+		    $this->db->where("order_status !=","Success");
+		}else{
+    		$this->db->where("payment_status","Success");
+		}
 		$this->db->where("order_type","subscribe");
-		$this->db->where("sdate >='".date("Y-m-d",strtotime($sdate))."' AND sdate <= '".date("Y-m-d",strtotime($edate))."'");
-		$this->db->or_where("edate >='".date("Y-m-d",strtotime($sdate))."' AND edate <= '".date("Y-m-d",strtotime($edate))."'");
+		$this->db->order_by("id", "desc");
+// 		$this->db->where("DATE(date_of_order) >='".date("Y-m-d",strtotime($sdate))."' AND DATE(date_of_order) <= '".date("Y-m-d",strtotime($edate))."'");
+// 		$this->db->or_where("edate >='".date("Y-m-d",strtotime($sdate))."' AND edate <= '".date("Y-m-d",strtotime($edate))."'");
 
 		$sorders = $this->db->get()->result();
 		
@@ -62,7 +79,7 @@ public function __construct(){
 		$fsorders = $resutset1->result();
 		
 			
-		$data = array_merge($dorders,$sorders,$fsorders);
+		$data = array_merge($sorders,$dorders,$fsorders);
 		
 		return $data;	
 	}
@@ -74,8 +91,9 @@ public function allOrders(){
 	$fsorders = $this->db->query("select order_id,user_id,shipping_address,delivery_status,id,order_type,user_data,order_status,deliveryShift,assigned_to,delivery_date as deliverydate,order_date as date_of_order from tbl_free_sample_orders order by id desc")->result(); */
 	$sdate = $this->input->post("sdate");
 	$edate = $this->input->post("edate");
+	$ref = $this->input->post("ref");
 		
-	$data = $this->getOrders($sdate,$edate);	
+	$data = $this->getOrders($sdate,$edate, $ref);	
 	
 	$jsonData = array();
 	
@@ -137,8 +155,10 @@ public function allOrders(){
 			}elseif($u->order_status == "Cancelled"){
 				$ostatus = '<span class="badge badge-danger" style="color:white">Cancelled</span>';
 			}else{
-				$ostatus = $u->order_status;
+				$ostatus = '<span class="badge badge-warning" style="color:white">'.$u->order_status.'</span>';
 			}
+			
+			$sdaysCount = (($u->subscription_days_count == '') || ($u->subscription_days_count == NULL) || ($u->subscription_days_count == 'alternate')) ? 30 : $u->subscription_days_count;
 
 				$nData1 = array();
 				$nData1["sno"] = $id;
@@ -152,6 +172,7 @@ public function allOrders(){
 				$nData1["cAddress"] = $udata->house_no."<br>".$udata->landmark."<br>".$udata->user_current_address."<br>".$area."<br>".$ucity;
 				$nData1["Delivery_Date"] = date("d-M-Y",strtotime($u->sub_start_date))." <br> ".date("d-M-Y",strtotime($u->sub_end_date));
 				$nData1["Type_of_Order"] =  $u->order_type;
+				$nData1["days_count"] =  $sdaysCount;
 				$nData1["shift"] =  $u->deliveryShift.'<a href='.base_url()."orders/invoice-orders/changeShift/".$u->order_id.'/'.$u->deliveryShift.' class="btn btn-info btn-xs btn-rounded"><i class="mdi mdi-apple-keyboard-shift"></i></a>';
 				$nData1["Assigned_To"] =  $aname;
 				$nData1["Status"] = $sstatus;
@@ -168,7 +189,7 @@ public function allOrders(){
 		   
 	   }else{
 		    
-		if(strtotime(date("Y-m-d",strtotime($u->deliverydate))) >= strtotime($sdate) && (strtotime(date("Y-m-d",strtotime($u->deliverydate))) <= strtotime($edate))){
+// 		if(strtotime(date("Y-m-d",strtotime($u->deliverydate))) >= strtotime($sdate) && (strtotime(date("Y-m-d",strtotime($u->deliverydate))) <= strtotime($edate))){
 		    if($u->delivery_status == "Success"){
 														
 				$status = '<span class="badge badge-success" style="color:white">Success</span>';
@@ -187,7 +208,7 @@ public function allOrders(){
 			}elseif($u->order_status == "Cancelled"){
 				$ostatus = '<span class="badge badge-danger" style="color:white">Cancelled</span>';
 			}else{
-				$ostatus = $u->order_status;
+				$ostatus = '<span class="badge badge-warning" style="color:white">'.$u->order_status.'</span>';
 			}
 		   
 		    $cancel = ($u->order_status == "Cancelled") ? "" : '<a href='.base_url()."orders/Invoiceorders/cancelOrder/".$u->order_id.' class="btn btn-danger btn-xs btn-rounded" onclick="return confirm('."'Are you sure want to cancel the order'".')"><i class="fa fa-times"></i></a>';
@@ -206,6 +227,7 @@ public function allOrders(){
 			$nData["cAddress"] = $udata->house_no."<br>".$udata->landmark."<br>".$udata->user_current_address."<br>".$area."<br>".$ucity;
 			$nData["Delivery_Date"] = date("Y-m-d",strtotime($u->deliverydate));
 			$nData["Type_of_Order"] =  $u->order_type;
+			$nData1["days_count"] =  1;
 			$nData["shift"] =  $u->deliveryShift.'<a href='.base_url()."orders/invoice-orders/changeShift/".$u->order_id.'/'.$u->deliveryShift.' class="btn btn-info btn-xs btn-rounded"><i class="mdi mdi-apple-keyboard-shift"></i></a>';
 			$nData["Assigned_To"] =  $aname;
 			$nData["Status"] = $status;
@@ -214,7 +236,7 @@ public function allOrders(){
 			$jsonData[] = $nData;
 
 			$id++;
-		}
+// 		}
 	}}
 	
 	
@@ -377,6 +399,9 @@ public function pauseSubscribtion(){
 	$id = $this->input->post("id");
 	$status = $this->input->post("status",true);
 	$uid = $this->db->get_where("orders",array("order_id"=>$oid))->row()->user_id;
+	
+	$odata = $this->db->get_where("orders",array("order_id"=>$oid))->row();
+	$subscription_days_count = $odata->subscription_days_count == "alternate" ? 30 : $odata->subscription_days_count;
 
 	
 		$data=array('pause_status'=>$status,"deliver_status"=>"Pending");
@@ -393,7 +418,12 @@ public function pauseSubscribtion(){
 				
 				$edate = end($ords)->delivery_date;
 				$edate = strtotime($edate);
-				$date = strtotime("+1 day", $edate);
+				
+				if($odata->subscription_days_count == "alternate"){
+					$date = strtotime("+2 days", $edate);
+				}else{
+					$date = strtotime("+1 day", $edate);
+				}
 				
 				$endDate = date('Y-m-d', $date);
 
@@ -417,23 +447,28 @@ public function pauseSubscribtion(){
 			
 		$uorders = $this->db->order_by("id","desc")->get_where("tbl_subscribed_deliveries",array("order_id"=>$oid,"user_id"=>$uid,"pause_status"=>"Inactive"));
 			
-		if($uorders->num_rows() != 30){
+		if($uorders->num_rows() != $subscription_days_count){
 			
-			if($uorders->num_rows() > 30){
+			if($uorders->num_rows() > $subscription_days_count){
 				
-				$count = ($uorders->num_rows() - 30);
+				$count = ($uorders->num_rows() - $subscription_days_count);
 				
 				$this->db->order_by("id","desc")->limit($count)->delete("tbl_subscribed_deliveries",array("order_id"=>$oid,"user_id"=>$uid,"pause_status"=>"Inactive"));
 				
 			}else{
 				
-				$count = (30 - $uorders->num_rows());
+				$count = ($subscription_days_count - $uorders->num_rows());
 				
 				for($i=1; $i<=$count; $i++){
 					
 					$edate = end($uorders->row()->delivery_date);
 					$edate = strtotime($edate);
-					$date = strtotime("+1 day", $edate);
+					
+					if($odata->subscription_days_count == "alternate"){
+						$date = strtotime("+2 days", $edate);
+					}else{
+						$date = strtotime("+1 day", $edate);
+					}
 
 					$endDate = date('Y-m-d', $date);
 

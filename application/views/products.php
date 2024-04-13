@@ -162,12 +162,15 @@
 					<div class="col-xl-5 col-lg-5 col-md-5 col-sm-12">
 						<form action="#" class="float-left label-form">
 						
-						<?php 
+						<?php
+						$kref = [];
 							if(count($cat->quantity) > 0){	
 							$i = 0;
-								foreach($cat->quantity as $k => $qty){
+							
+								foreach($cat->quantity as $qk => $qty){
 									
-									if($cat->status[$k] == "Active"){
+									if($cat->status[$qk] == "Active"){
+									    array_push($kref, $qk);
 						?>
 							<label class="radio-inline">
  								<input type="radio" name="optradio" class="catQty" product_id="<?php echo $pr->id ?>" cat_id="<?php echo $qty ?>" <?php echo ($i==0) ? "checked" : "" ?>> <?php echo $qty ?>
@@ -177,7 +180,8 @@
 						<?php 
 						$i++;
 						
-						}}} ?>	
+						}}} 
+						?>	
 					
 						<label class="radio-inline" style="visibility: <?php echo $i!=0?'hidden':""  ?>;display:<?php echo $i==0?'none':""?>;">
  								<input type="radio" > <?php echo $qty ?>
@@ -203,15 +207,14 @@
 					</div>
 			
 			<?php  
+			    
 				$pdate = date("m/d/Y");		
 				$pm = $this->db->query("select * from tbl_price_management where product_id = '$pr->id' AND  '$pdate' BETWEEN  startdate AND enddate and deleted=0 and status='Active'")->row();
-
-				$discPm = json_decode(isset($pm->price_management) ? $pm->price_management : "");
-
-				$disType = isset($discPm->discount_type) ? $discPm->discount_type : "";
-
-				$disPrice = isset($discPm->price) ? $discPm->price : "";
-
+                $discPm = json_decode(isset($pm->price_management) ? $pm->price_management : "");
+                $disType = isset($discPm->discount_type) ? $discPm->discount_type : "";
+				$disPrice = isset($discPm->price) ? $discPm->price : $cat->price;
+				
+				
 			?>	
 				
 					<input type="hidden" id="disTType<?php echo $pr->id ?>" value="<?php echo $disType ?>">
@@ -225,12 +228,12 @@
 
 					?>
 					
-					<input type="hidden" id="actprice<?php echo $pr->id ?>" value="<?php echo $cat->price[0] ?>">
-					<input type="hidden" id="dPPrice<?php echo $pr->id ?>" value="<?php echo $cat->price[0] - $disPrice[0] ?>">
+					<input type="hidden" id="actprice<?php echo $pr->id ?>" value="<?php echo $cat->price[$kref[0]] ?>">
+					<input type="hidden" id="dPPrice<?php echo $pr->id ?>" value="<?php echo $cat->price[$kref[0]] - $disPrice[$kref[0]] ?>">
 							      
 						<div class="extprice<?php echo $pr->id ?>">		  
 						
-							<span class="label-form actual"><?php echo ($disPrice[0] != "") ? "&#8377;".$cat->price[0].".00" : "" ?></span>
+							<span class="label-form actual"><?php echo ($disPrice[$kref[0]] != "") ? "&#8377;".$cat->price[$kref[0]].".00" : "" ?></span>
 							
 						</div>	
 						
@@ -239,35 +242,35 @@
 					
 					<div class="percent<?php echo $pr->id ?>"> 	  	  
 
-					<?php if($disType=="percent" && $disPrice[0] != ""){ ?>
+					<?php if($disType=="percent" && $disPrice[$kref[0]] != ""){ ?>
 					
-							<span class="label-form off"><?php echo $disPrice[0] ?>% Off</span>
+							<span class="label-form off"><?php echo $disPrice[$kref[0]] ?>% Off</span>
 					<?php } ?>
 					
 					</div>
 					
 					<div class="rupees<?php echo $pr->id ?>"> 	  	  
 
-					<?php if($disType=="Rs" && $disPrice[0] != ""){ ?>
+					<?php if($disType=="Rs" && $disPrice[$kref[0]] != ""){ ?>
 					
-							<span class="label-form off">&#8377; <?php echo $cat->price[0] - $disPrice[0] ?> Off</span>
+							<span class="label-form off">&#8377; <?php echo $cat->price[$kref[0]] - $disPrice[$kref[0]] ?> Off</span>
 					<?php } ?>
 					
 					</div>
 	
-						<span class="label-form h4 upprice<?php echo $pr->id ?>">&#8377; <?php echo $this->products_model->productDiscountprice($pr->id); ?>.00</span>
+						<span class="label-form h4 upprice<?php echo $pr->id ?>">&#8377; <?php echo $disPrice[$kref[0]]; ?>.00</span>
 						
 						
 					</div>
 					
 					<?php 
 						
-						$dprice = $this->products_model->productDiscountprice($pr->id);
+						//$dprice = $this->products_model->productDiscountprice($pr->id);
 						
 						?>
 					
-					<input type="hidden" id="upprice<?php echo $pr->id ?>"  value="<?php echo $dprice ?>">
-					<input type="hidden" id="upQty<?php echo $pr->id ?>"  value="<?php echo $cat->quantity[0] ?>">
+					<input type="hidden" id="upprice<?php echo $pr->id ?>"  value="<?php echo $disPrice[$kref[0]] ?>">
+					<input type="hidden" id="upQty<?php echo $pr->id ?>"  value="<?php echo $cat->quantity[$kref[0]] ?>">
 					
 					
 					

@@ -5,8 +5,8 @@
 //date_default_timezone_set('Asia/Kolkata');
 
 
-	$workingKey='3827A52CEA61B0DDC2C73E46C5EC1C20';		//Working Key should be provided here.
-	$access_code = 'AVBI09IE19BN38IBNB';
+	$workingKey='9EDFB872C0112FA119CE0BCF6EEADD05';		//Working Key should be provided here.
+	$access_code = 'AVYV92KG93CE78VYEC';
 	$encResponse=$_POST["encResp"];			//This is the response sent by the CCAvenue Server
 	$rcvdString=decrypt($encResponse,$workingKey);		
 	
