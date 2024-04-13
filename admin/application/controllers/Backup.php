@@ -240,5 +240,67 @@ class Backup extends CI_Controller {
 		
 	}
 	
-	
+	public function backup_orders_datewise(){
+
+		$this->load->dbutil();
+
+		$date = date("Y-m-d");
+		
+		$orders_query = "SELECT * FROM orders where DATE(date_of_order) = '$date'";
+        $orders_result = $this->db->query($orders_query);
+
+		$orders_products_query = "SELECT * FROM order_products where DATE(delivery_date) = '$date'";
+        $orders_products_result = $this->db->query($orders_products_query);
+
+		$subscribed_deliveries_query = "SELECT * FROM tbl_subscribed_deliveries where DATE(created_date) = '$date'";
+        $subscribed_deliveries_result = $this->db->query($subscribed_deliveries_query);
+
+        if ($orders_result->num_rows() > 0) {
+            $delimiter = ",";
+            $newline = "\r\n";
+            $data = $this->dbutil->csv_from_result($orders_result, $delimiter, $newline);
+            $filename = "orders_$date.csv";
+            $path = FCPATH . 'uploads/backups/' . $filename;
+            if (write_file($path, $data)) {
+                log_message('info', 'Data exported successfully to ' . $filename);
+            } else {
+				log_message('error', 'Unable to write data to ' . $filename);
+            }
+        } else {
+            log_message('error', 'No data found for orders of '.$date);
+        }
+
+// order_products
+		if ($orders_products_result->num_rows() > 0) {
+            $delimiter = ",";
+            $newline = "\r\n";
+            $data = $this->dbutil->csv_from_result($orders_products_result, $delimiter, $newline);
+            $filename = "orders_products_$date.csv";
+            $path = FCPATH . 'uploads/backups/' . $filename;
+            if (write_file($path, $data)) {
+				log_message('info', 'Data exported successfully to ' . $filename);
+            } else {
+				log_message('error', 'Unable to write data to ' . $filename);
+            }
+        } else {
+            log_message('error', 'No data found for orders_products of '.$date);
+        }
+
+// subscribed_deliveries
+		if ($subscribed_deliveries_result->num_rows() > 0) {
+			$delimiter = ",";
+			$newline = "\r\n";
+			$data = $this->dbutil->csv_from_result($subscribed_deliveries_result, $delimiter, $newline);
+			$filename = "subscribed_deliveries_$date.csv";
+			$path = FCPATH . 'uploads/backups/' . $filename;
+			if (write_file($path, $data)) {
+				log_message('info', 'Data exported successfully to ' . $filename);
+            } else {
+				log_message('error', 'Unable to write data to ' . $filename);
+            }
+        } else {
+            log_message('error', 'No data found for subscribed_deliveries of '.$date);
+        }
+	}
+
 }
