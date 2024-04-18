@@ -262,6 +262,7 @@ class Backup extends CI_Controller {
             $filename = "orders_$date.csv";
             $path = FCPATH . 'uploads/backups/' . $filename;
             if (write_file($path, $data)) {
+				$this->db->insert("tbl_backups", ["type"=>"transactions", "source_file"=>'uploads/backups/' . $filename,"created_date"=> date("Y-m-d H:i:s")]);
                 log_message('info', 'Data exported successfully to ' . $filename);
             } else {
 				log_message('error', 'Unable to write data to ' . $filename);
@@ -278,6 +279,7 @@ class Backup extends CI_Controller {
             $filename = "orders_products_$date.csv";
             $path = FCPATH . 'uploads/backups/' . $filename;
             if (write_file($path, $data)) {
+				$this->db->insert("tbl_backups", ["type"=>"transactions", "source_file"=>'uploads/backups/' . $filename,"created_date"=> date("Y-m-d H:i:s")]);
 				log_message('info', 'Data exported successfully to ' . $filename);
             } else {
 				log_message('error', 'Unable to write data to ' . $filename);
@@ -294,6 +296,7 @@ class Backup extends CI_Controller {
 			$filename = "subscribed_deliveries_$date.csv";
 			$path = FCPATH . 'uploads/backups/' . $filename;
 			if (write_file($path, $data)) {
+				$this->db->insert("tbl_backups", ["type"=>"transactions", "source_file"=>'uploads/backups/' . $filename,"created_date"=> date("Y-m-d H:i:s")]);
 				log_message('info', 'Data exported successfully to ' . $filename);
             } else {
 				log_message('error', 'Unable to write data to ' . $filename);

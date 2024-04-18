@@ -52,47 +52,86 @@
             <div class="container-fluid">
             
             <div class="row clearfix">  
-			<div class="col-md-6">
-				<div class="card">
-					<div class="card-header">Download MYSQL Database</div>
-					<div class="body" align="right" style="padding:10px;">
-						<a href="<?php echo base_url('backup/db_backup');?>" target="_blank">
-						  <button type="button" class="btn btn-primary">Download</button>
-					  </a>
+				<div class="col-md-6">
+					<div class="card">
+						<div class="card-header">Download MYSQL Database</div>
+						<div class="body" align="right" style="padding:10px;">
+							<a href="<?php echo base_url('backup/db_backup');?>" target="_blank">
+							<button type="button" class="btn btn-primary">Download</button>
+						</a>
+						</div>
+
+					<div class="" role="tab">
+						<h5 class="mb-0" style="margin-left: 10px">All Database Backups</h5>
 					</div>
+					<div class="card-body">
+						<table class="table table-bordered table-striped table-hover dataTable js-exportable">
+						<thead>
+							<tr> 
+								<th>Sl.No.</th>
+								<th>Backup Date</th>
+								<!--<th>Downlaod</th>-->
+							</tr>
+						</thead>
+						<tbody>
+							<?php 
+							$databases = $this->db->get_where("tbl_backups",["type"=>"database"])->result();
+							if($databases){
+									$key=1;
+									foreach($databases as $db):
+								?>
+							<tr>
+								<td><?php echo $key;?></td>
+								<td><?php echo date("d-m-Y H:i:s",strtotime($db->created_date));?></td>
+								<!--<td><a href="<?php //echo base_url().$db->source_file;?>" class="btn btn-info btn-sm" style="border-radius: 15px">Download</a></td>-->
+							</tr>
+							<?php $key++; endforeach;}?>
 
-				  <div class="" role="tab">
-					<h5 class="mb-0" style="margin-left: 10px">All Database Backups</h5>
-				  </div>
-				  <div class="card-body">
-					<table class="table table-bordered table-striped table-hover dataTable js-exportable">
-					  <thead>
-						  <tr> 
-							  <th>Sl.No.</th>
-							  <th>Backup Date</th>
-							  <!--<th>Downlaod</th>-->
-						  </tr>
-					  </thead>
-					  <tbody>
-						  <?php 
-						  $databases = $this->db->get_where("tbl_backups",["type"=>"database"])->result();
-						  if($databases){
-								  $key=1;
-								 foreach($databases as $db):
-							  ?>
-						 <tr>
-							  <td><?php echo $key;?></td>
-							  <td><?php echo date("d-m-Y H:i:s",strtotime($db->created_date));?></td>
-							  <!--<td><a href="<?php //echo base_url().$db->source_file;?>" class="btn btn-info btn-sm" style="border-radius: 15px">Download</a></td>-->
-						  </tr>
-						  <?php $key++; endforeach;}?>
+						</tbody>
 
-					  </tbody>
-
-					</table>
-				  </div>
+						</table>
+					</div>
+					</div>
 				</div>
-			</div>
+
+				<div class="col-md-6">
+					<div class="card">
+						<div class="card-header">Transactions Backup</div>
+
+					<div class="" role="tab">
+						<!-- <h5 class="mb-0" style="margin-left: 10px">All Database Backups</h5> -->
+					</div>
+					<div class="card-body table-responsive">
+						<table class="table table-bordered table-striped table-hover dataTable js-exportable">
+						<thead>
+							<tr> 
+								<th>Sl.No.</th>
+								<th>Table Name</th>
+								<th>Date</th>
+								<th>Download</th>
+							</tr>
+						</thead>
+						<tbody>
+							<?php 
+							$tdatabases = $this->db->get_where("tbl_backups",["type"=>"transactions"])->result();
+							if($tdatabases){
+									$tkey=1;
+									foreach($tdatabases as $tdb):
+								?>
+							<tr>
+								<td><?php echo $tkey;?></td>
+								<td><? echo basename($tdb->source_file) ?></td>
+								<td><?php echo date("d-m-Y",strtotime($tdb->created_date));?></td>
+								<td><a href="<?php echo base_url().$tdb->source_file;?>" class="btn btn-info btn-sm" style="border-radius: 15px" download>Download</a></td>
+							</tr>
+							<?php $tkey++; endforeach;}?>
+
+						</tbody>
+
+						</table>
+					</div>
+					</div>
+				</div>
 
 
 			<!--<div class="col-md-6">
