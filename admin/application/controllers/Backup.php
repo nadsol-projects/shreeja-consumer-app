@@ -244,7 +244,7 @@ class Backup extends CI_Controller {
 
 		$this->load->dbutil();
 
-		$date = date("Y-m-d");
+		$date = date("Y-m-d", strtotime('-1 day'));
 		
 		$orders_query = "SELECT * FROM orders where DATE(date_of_order) = '$date'";
         $orders_result = $this->db->query($orders_query);
