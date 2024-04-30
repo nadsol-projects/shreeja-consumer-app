@@ -711,7 +711,7 @@ $("#promoCode").click(function(){
 			
 			if(data.status == "success"){
 			    
-			    var totalDisc = parseFloat(discount) + parseFloat(data.disPrice);
+			    var totalDisc = (parseFloat(discount) > 0 ? parseFloat(discount) : 0) + parseFloat(data.disPrice);
 				
 				Swal(
 				  'Success!',
