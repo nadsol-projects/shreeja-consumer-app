@@ -27,7 +27,7 @@ public function __construct(){
 	public function getCCavenueOrderinfo()
 	{
 		require_once('assets/ccavenue/Crypto.php');
-		$orderid = "ORD193000024482";
+		$orderid = $this->input->post('order_id');//"ORD193000024482";
 
 		$oData = json_encode(array("order_no"=> $orderid));
 		$access_code="AVYV92KG93CE78VYEC";//"AVBI09IE19BN38IBNB";
