@@ -131,6 +131,7 @@ $("#getorderinfo").submit(function(e){
         url: '<? echo base_url('orders/invoiceorders/getCCavenueOrderinfo') ?>',
         data: fdata,
         success:function(data){
+            $(".orderinfo").html(data.result);
             console.log(data);
         },
         error:function(data){

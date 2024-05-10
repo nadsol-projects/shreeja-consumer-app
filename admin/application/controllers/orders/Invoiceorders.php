@@ -50,9 +50,9 @@ public function __construct(){
 		$odata=decrypt($encResponse,$workingKey);
 		$odata = json_decode($odata);
 
-		echo $orderid;
-		print_r($odata);
-		return ($odata->Order_Status_Result);
+		// return ($odata->Order_Status_Result);
+
+		echo json_encode(["status"=>200, "result"=> $odata->Order_Status_Result]);
 		
 	}
 	
