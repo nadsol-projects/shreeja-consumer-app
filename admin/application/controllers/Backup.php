@@ -16,7 +16,75 @@ class Backup extends CI_Controller {
         $this->load->view("sql_backup");
         
     }
+    
+	public function restore_order(){
+        
+        $this->load->view("restore_order");
+        
+    }
 
+	public function restoreOrder(){
+
+		$order_id = $this->input->post('order_id');
+		$date = $this->input->post('date');
+
+		$odata = [];
+		$opdata = [];
+		$sddata = [];
+		$orderscsv = array_map('str_getcsv', file(base_url()."uploads/backups/orders_$date.csv"));
+		$order_productscsv = array_map('str_getcsv', file(base_url()."uploads/backups/orders_products_$date.csv"));
+		$subscribed_deliveriescsv = array_map('str_getcsv', file(base_url()."uploads/backups/subscribed_deliveries_$date.csv"));
+
+		if(count($orderscsv) > 0){
+			foreach($orderscsv as $key => $order){
+				if($order[1] == $order_id){
+					$odata = $orderscsv[$key];
+				}
+			}
+		}else{
+			$this->session->set_flashdata('err','<div class="alert alert-danger">Order Details Not Found.</div>');
+			redirect('backup/restore_order');
+		}
+
+		if(count($order_productscsv) > 0){
+			foreach($order_productscsv as $key1 => $order_product){
+				if($order_product[1] == $order_id){
+					array_push($opdata,$order_productscsv[$key1]);
+				}
+			}
+		}
+
+		if(count($subscribed_deliveriescsv) > 0){
+			foreach($subscribed_deliveriescsv as $key2 => $subscribed_delivery){
+				if($subscribed_delivery[4] == $order_id){
+					array_push($sddata,$subscribed_deliveriescsv[$key2]);
+				}
+			}
+		}
+
+		if($odata){
+			$this->db->where("order_id", $order_id)->update("orders", [
+				"sub_start_date" => $odata[18], 
+				"sub_end_date" => $odata[19], 
+				"sdate"=>$odata[20],
+				"edate"=>$odata[21],
+			]);
+		}
+
+		if(count($sddata) > 0){
+			$keys = $subscribed_deliveriescsv[0];
+
+			foreach($sddata as $skey => $s){
+				$sddata[$skey] = array_combine($keys, $s);
+			} 
+			$this->db->delete("subscribed_deliveries", ["order_id"=>$order_id]);
+			$this->db->insert_batch("subscribed_deliveries", $sddata);
+		}
+
+		$this->session->set_flashdata('err','<div class="alert alert-success">Order Details Updated Successfully.</div>');
+		redirect('backup/restore_order');
+		
+	}
 
 	public function Zip( $source, $destination , $excludes=[],$db="") {
 	

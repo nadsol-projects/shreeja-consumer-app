@@ -29,18 +29,21 @@
 
                         </div>
                     </div>
-                   <!--  <div class="col-7 align-self-center">
+                    <div class="col-7 align-self-center">
                         <div class="d-flex no-block justify-content-end align-items-center">
                             <nav aria-label="breadcrumb">
                                 <ol class="breadcrumb">
                                     <li class="breadcrumb-item">
-                                        <a href="#">Home</a>
+                                        <a href="<? echo base_url('dashboard') ?>">Dashboard</a>
                                     </li>
-                                    <li class="breadcrumb-item active" aria-current="page">Library</li>
+                                    <li class="breadcrumb-item">
+                                        <a href="<? echo base_url('backup') ?>">Backup</a>
+                                    </li>
+                                    <li class="breadcrumb-item active" aria-current="page">Restore Order</li>
                                 </ol>
                             </nav>
                         </div>
-                    </div> -->
+                    </div> 
                 </div>
             </div>
             <!-- ============================================================== -->
@@ -54,88 +57,30 @@
             <div class="row clearfix">  
 				<div class="col-md-6">
 					<div class="card">
-						<div class="card-header">Download MYSQL Database</div>
-						<div class="body" align="right" style="padding:10px;">
-							<a href="<?php echo base_url('backup/db_backup');?>" target="_blank">
-							<button type="button" class="btn btn-primary">Download</button>
-						</a>
-						</div>
-
-					<div class="" role="tab">
-						<h5 class="mb-0" style="margin-left: 10px">All Database Backups</h5>
-					</div>
+						<div class="card-header">Restore Order</div>
+						
 					<div class="card-body">
-						<table class="table table-bordered table-striped table-hover dataTable js-exportable">
-						<thead>
-							<tr> 
-								<th>Sl.No.</th>
-								<th>Backup Date</th>
-								<!--<th>Downlaod</th>-->
-							</tr>
-						</thead>
-						<tbody>
-							<?php 
-							$databases = $this->db->get_where("tbl_backups",["type"=>"database"])->result();
-							if($databases){
-									$key=1;
-									foreach($databases as $db):
-								?>
-							<tr>
-								<td><?php echo $key;?></td>
-								<td><?php echo date("d-m-Y H:i:s",strtotime($db->created_date));?></td>
-								<!--<td><a href="<?php //echo base_url().$db->source_file;?>" class="btn btn-info btn-sm" style="border-radius: 15px">Download</a></td>-->
-							</tr>
-							<?php $key++; endforeach;}?>
-
-						</tbody>
-
-						</table>
+                        <? echo $this->session->flashdata('err')  ?>
+						<form class="form p-t-20" method="post" action="<?php echo base_url() ?>backup/restoreOrder" enctype="multipart/form-data">
+							<div class="form-group">
+								<label>Order ID</label>
+								<div class="input-group mb-3">
+									<input type="text" class="form-control" placeholder="Order ID" aria-label="Username" name="order_id" aria-describedby="basic-addon11">
+								</div>
+							</div>
+							<div class="form-group">
+								<label for="exampleInputEmail1">Date</label>
+								<div class="input-group mb-3">
+									<input type="date" class="form-control" placeholder="Email" aria-label="Email" name="date" aria-describedby="basic-addon22"> 
+								</div>
+							</div>
+							
+							<button type="submit" class="btn btn-success m-r-10 pull-right">Submit</button>
+						</form>
 					</div>
 					</div>
 				</div>
 
-				<div class="col-md-6">
-					<div class="card">
-						<div class="card-header">Transactions Backup</div>
-
-						<div class="body" align="right" style="padding:10px;">
-						<a href="<?php echo base_url('backup/restore_order');?>">
-						  <button type="button" class="btn btn-primary">Restore Order</button>
-						</a>
-					</div>
-
-					<div class="card-body table-responsive">
-						<table class="table table-bordered table-striped table-hover dataTable js-exportable">
-						<thead>
-							<tr> 
-								<th>Sl.No.</th>
-								<th>Table Name</th>
-								<th>Date</th>
-								<th>Download</th>
-							</tr>
-						</thead>
-						<tbody>
-							<?php 
-							$tdatabases = $this->db->get_where("tbl_backups",["type"=>"transactions"])->result();
-							if($tdatabases){
-									$tkey=1;
-									foreach($tdatabases as $tdb):
-								?>
-							<tr>
-								<td><?php echo $tkey;?></td>
-								<td><? echo basename($tdb->source_file) ?></td>
-								<td><?php echo date("d-m-Y",strtotime($tdb->created_date));?></td>
-								<td><a href="<?php echo base_url().$tdb->source_file;?>" class="btn btn-info btn-sm" style="border-radius: 15px" download>Download</a></td>
-							</tr>
-							<?php $tkey++; endforeach;}?>
-
-						</tbody>
-
-						</table>
-					</div>
-					</div>
-				</div>
-			
 		</div>
 	</div>	
 </div>

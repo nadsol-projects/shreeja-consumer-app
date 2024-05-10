@@ -67,6 +67,7 @@
                     <div class="col-lg-12">
                        
                     <div class="row">   
+                        <div class="col-md-10">
 						  <div class="col-md-4">   
 							<div class="form-group">
 								<label>Select Start & End Date :</label>
@@ -102,8 +103,13 @@
 					      	<button id="filter" type="button" class="btn btn-info waves-effect waves-light m-t-30">Submit</button>
 					      	
 					      </div> 
+					    </div>
+                        
+                        <div class="col-md-2">
+                            <a class="btn btn-primary waves-effect waves-light m-t-30" href="<? echo base_url('orders/invoiceorders/getOrderinfo') ?>">Get Order Info</a>
+                        </div>
 						      
-					   </div>
+					</div>
 
                        
                        

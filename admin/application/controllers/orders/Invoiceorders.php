@@ -19,6 +19,42 @@ public function __construct(){
 		$this->load->view('orders/admin/invoiceOrders');
 	}
 	
+	public function getOrderinfo()
+	{
+		$this->load->view('orders/admin/orderinfo');
+	}
+
+	public function getCCavenueOrderinfo()
+	{
+		require_once('assets/ccavenue/Crypto.php');
+		$orderid = "ORD193000024482";
+
+		$oData = json_encode(array("order_no"=> $orderid));
+		$access_code="AVYV92KG93CE78VYEC";//"AVBI09IE19BN38IBNB";
+		$workingKey='9EDFB872C0112FA119CE0BCF6EEADD05';//'3827A52CEA61B0DDC2C73E46C5EC1C20';	
+		$enq_req = encrypt($oData,$workingKey);
+	//$this->response($enq_req, REST_Controller::HTTP_OK);
+		$ch = curl_init();
+		$url = 'https://api.ccavenue.com/apis/servlet/DoWebTrans?enc_request='.$enq_req.'&access_code='.$access_code.'&command=orderStatusTracker&request_type=json&response_type=JSON';
+		curl_setopt($ch,CURLOPT_URL,$url);
+		curl_setopt($ch,CURLOPT_RETURNTRANSFER,true);
+		curl_setopt($ch, CURLOPT_POSTFIELDS,"enc_request='.$enq_req.'&access_code='.$access_code.'&command=orderStatusTracker&request_type=json&response_type=JSON");
+		//curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+		$odata = curl_exec($ch);
+		
+		curl_close($ch);
+		$encResponse=explode('&', $odata);
+		$encResponse=explode('=', $encResponse[1]);
+		$encResponse=str_replace("\n", "", $encResponse[1]);
+		$encResponse=str_replace("\r", "", $encResponse);
+		$odata=decrypt($encResponse,$workingKey);
+		$odata = json_decode($odata);
+
+		echo $orderid;
+		print_r($odata);
+		return ($odata->Order_Status_Result);
+		
+	}
 	
 	public function generateInvoice($oid){
 		
