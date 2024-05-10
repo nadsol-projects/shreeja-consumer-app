@@ -130,9 +130,16 @@ $("#getorderinfo").submit(function(e){
         type: 'post',
         url: '<? echo base_url('orders/invoiceorders/getCCavenueOrderinfo') ?>',
         data: fdata,
+        dataType: 'json',
         success:function(data){
-            $(".orderinfo").html(data.result);
-            console.log(data);
+            
+            var result = '';
+            for (const property in data.result) {
+              result += property+': '+data.result[property]+'<br>';
+            }
+            
+            $(".orderinfo").html(result);
+            console.log(data.result);
         },
         error:function(data){
             console.log(data);
