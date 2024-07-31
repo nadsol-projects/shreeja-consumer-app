@@ -6,8 +6,15 @@ require_once(APPPATH.'libraries/paytm_library/encdec_paytm.php');
 class Payment extends CI_Controller {
 
 	public function paytm_pay($id){
-		
+		$this->load->helper('cookie');
 		$this->session->set_userdata(array("corder_id"=>$id));
+		$ucookie= [
+			'name'   => 'corder_id',
+			'value'  => $id,                            
+			'expire' => '3000',                                                                                   
+			'secure' => TRUE
+		];
+		$this->input->set_cookie($ucookie);
 		$this->load->view('ccavenue/index');		
 	}
 	

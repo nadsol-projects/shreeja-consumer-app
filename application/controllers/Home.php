@@ -533,9 +533,24 @@ public function do_login(){
 //			$msg = "$otp (OTP number) is your Shreeja Milk OTP. OTP is confidential for security reasons do not share with any one.";
 //		
 //			$this->sms->send_sms($mobile,$msg);
-			
+			$this->load->helper('cookie');
 			$this->session->set_userdata(array("user_mobile"=>$mobile,"user_id"=>$pchk->userid));
-	
+			$mcookie= [
+				'name'   => 'user_mobile',
+				'value'  => $mobile,                            
+				'expire' => '3000',                                                                                   
+				'secure' => TRUE
+			];
+			$ucookie= [
+				'name'   => 'user_id',
+				'value'  => $pchk->userid,                            
+				'expire' => '3000',                                                                                   
+				'secure' => TRUE
+			];
+	 
+			$this->input->set_cookie($mcookie);
+			$this->input->set_cookie($ucookie);
+
 			redirect("products");
 			
 		}else{
@@ -756,7 +771,11 @@ public function logout(){
 	$this->session->unset_userdata("user_mobile");
 	$this->session->unset_userdata("location_id");
 	$this->session->unset_userdata("reg_status");
-	redirect("https://shreejamilk.com/");
+	$this->load->helper('cookie');
+	delete_cookie("user_mobile");
+	delete_cookie("user_id");
+	delete_cookie("corder_id");
+	redirect("https://sales.shreejamilk.com/");
 	
 }
 	

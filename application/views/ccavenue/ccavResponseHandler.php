@@ -36,6 +36,15 @@
 		if($i==5) $payment_mode = $information[1];
 	}
 
+	$user_id = $this->session->userdata("user_id");
+	if(!$user_id){
+		$cuser_id = $this->input->cookie('user_id',true);
+		$cuser_mobile = $this->input->cookie('user_mobile',true);
+		$cokOrderid = $this->input->cookie('corder_id',true);
+
+		$this->session->set_userdata(array("user_mobile"=>$cuser_mobile,"user_id"=>$cuser_id,"corder_id"=>$cokOrderid));
+	}
+
 	if(isset($rcvdString) || $rcvdString != null && $rcvdString != ''){
     
         $this->user_model->order_status($order_id, $order_status, $tracking_id, $bank_ref_no);
