@@ -550,6 +550,7 @@ public function do_login(){
 	 
 			$this->input->set_cookie($mcookie);
 			$this->input->set_cookie($ucookie);
+			$this->cart->destroy();
 
 			redirect("products");
 			
