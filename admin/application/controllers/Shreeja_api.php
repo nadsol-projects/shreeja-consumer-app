@@ -1476,31 +1476,27 @@ class Shreeja_api extends REST_Controller
 
     
 
-     public function generateInvoice_get(){
+     
+	public function generateInvoice_get(){
 
 		$oid = $this->input->get('orderid');
 
-	     $od = $this->db->get_where("orders",array("order_id"=>$oid,"payment_status"=>"Success"))->num_rows();
-
-	     $fod = $this->db->get_where("tbl_free_sample_orders",array("order_id"=>$oid))->row();
-
-	     if($od > 0){
-
-	         $mydata =  $this->db->get_where("orders",array("order_id"=>$oid,"payment_status"=>"Success"))->row();
-
-	     }else{
-
-	         $mydata = $fod;
-
-	     }
-
-		$dd["o"] = $mydata;
-
+        $odata = $this->db->get_where("orders",array("order_id"=>$oid,"payment_status"=>"Success"))->row();
 		
+		if($odata){
+			
+			$data["o"] = $odata;
+			
+		}else{
+			
+			$data["o"] = $this->db->get_where("tbl_free_sample_orders",array("order_id"=>$oid,"order_status"=>"Success"))->row();
+			
+		}
+	
+		$view = $this->load->view('orders/invoice',$data);		
+			
 
-		$data =  $this->load->view('paytm/invoice',$dd);	
-
-	    $this->response($data, REST_Controller::HTTP_OK); exit();
+	    $this->response($view, REST_Controller::HTTP_OK); exit();
 
 	     //$this->response($data, REST_Controller::HTTP_OK); 
 
@@ -1519,6 +1515,8 @@ class Shreeja_api extends REST_Controller
 			}	 
 
 	}
+
+
 
     
 
