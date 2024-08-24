@@ -282,14 +282,19 @@ public function sendOtp(){
 public function otpConfirm(){
 	
 	$mobile = $this->session->userdata("mobile_number");
-	
-	
 	$otp = $this->input->post("otp", true);
+	$captcha = $this->input->post("captcha",true);
 	
 	$otpChk = $this->db->get_where("fdm_va_otp",array("otp"=>$otp,"mobile_number"=>$mobile))->num_rows();
 	if($otpChk == 1){
 		
 //		$this->db->where("user_mobile",$mobile)->update("shreeja_users",array("steps_completed"=>3));
+
+		$genCaptcha = $this->session->userdata('captchaCode');
+		if($genCaptcha !== $captcha){
+			echo "captchaerror";
+			exit;
+		}
 		
 		$this->db->delete("fdm_va_otp",array("mobile_number"=>$mobile));
 		echo "success";

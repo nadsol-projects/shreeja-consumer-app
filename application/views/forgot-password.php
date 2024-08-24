@@ -37,6 +37,26 @@
 				<input type="tel" name="otp" id="sotp" class="form-control" placeholder="OTP">
 
 			  </div>
+
+			  <div class="input-group">
+			  <div class="row" style="width: fit-content">
+                                    
+					<div class="col-6" style="margin-top: 24px">
+						
+						<?php echo $this->admin->generateCaptcha(); ?>		
+						
+					</div>
+					
+					<div class="col-6">
+						
+						<input type="text" class="form-control" placeholder="Captcha" aria-label="Username" name="captcha" id="captcha" aria-describedby="basic-addon1" required>
+						
+					</div>
+					
+				</div>
+
+			  </div>
+
 							<div class="pull-right" id=""><a href="javascrip:void(0)" id="resendOtp" style="color: black">resend OTP</a></div>
 	  
 	  	      <input type="button" id="otpsubmit" class="btn btn-block mt-3 login-submit" value="Submit" />
@@ -157,6 +177,7 @@ $("#msubmit").click(function(){
 $("#otpsubmit").click(function(){
 	
 	var otp = $("#sotp").val();
+	var captcha = $("#captcha").val();
 	
 	if(otp == ""){
 		
@@ -164,11 +185,17 @@ $("#otpsubmit").click(function(){
 		
 		return false;
 	}
+	if(captcha == ""){
+		
+		$("#error").html('<div class="alert alert-danger">Please Enter Captcha Code</div>')
+		
+		return false;
+	}
 	
 	$.ajax({
 		
 		type : "post",
-		data : {otp :otp},
+		data : {otp :otp, captcha: captcha},
 		url : "<?php echo base_url("home/otpConfirm") ?>",
 		success : function(data){
 			
@@ -180,6 +207,11 @@ $("#otpsubmit").click(function(){
 			if(data == "error"){
 				
 				$("#error").html('<div class="alert alert-danger">Please Enter Valid OTP</div>')
+
+			}
+			if(data == "captchaerror"){
+				
+				$("#error").html('<div class="alert alert-danger">Please Enter Valid Captcha Code</div>')
 
 			}
 			

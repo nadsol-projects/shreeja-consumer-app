@@ -43,6 +43,46 @@ class Admin extends CI_Model{
 		
 		return $id;
 	}
+
+	public function generateCaptcha(){
+		
+		
+		// Captcha Conf
+
+	
+		$config = array(
+            'img_path'      => 'uploads/captcha/',
+            'img_url'       => base_url().'uploads/captcha/',
+			'img_width' => 160,
+			'img_height' => 35,
+			'word_length'   => 6,
+			'font_size' => 16,
+            'font_path' => FCPATH.'uploads/captcha/fonts/verdana.ttf',
+			'pool'          => '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ',
+			'colors'        => array(
+                // 'background' => array(255, 255, 255),
+                // 'border' => array(255, 255, 255),
+                'text' => array(0, 0, 0),
+                // 'grid' => array(255, 40, 40)
+        )
+		);
+	
+        $captcha = create_captcha($config);
+        
+        // Unset previous captcha and set new captcha word
+        $this->session->unset_userdata('captchaCode');
+        $this->session->set_userdata('captchaCode', $captcha['word']);
+        
+        // Pass captcha image to view
+        $captchaImg = $captcha['image'];
+	
+		return($captchaImg);
+		
+// Captcha conf ends	
+		
+		
+		
+	}
 	
 	public function insertoption($option_name,$option_value){
 		
